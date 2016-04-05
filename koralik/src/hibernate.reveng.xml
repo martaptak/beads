@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+	<table-filter match-name="Beads" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="Category" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="Color" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="Finish" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="Finish_Beads" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+</hibernate-reverse-engineering>
