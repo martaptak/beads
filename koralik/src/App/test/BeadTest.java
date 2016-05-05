@@ -17,7 +17,7 @@ public class BeadTest {
 	
 	public void test1()
 	{
-		List<Beads> rozmiary = rozmiaryDao.listBeadsFotTable();
+		List<Beads> rozmiary = rozmiaryDao.listBeadsForTable();
 		
 		assert(rozmiary.size() > 0);
 		System.out.println("Rozmiary size: " + rozmiary.size());
@@ -35,6 +35,20 @@ public class BeadTest {
 		{
 			System.out.println("Rozmiar: " + r.getSize());
 		}
+	}
+	
+	public void test3(){
+		List<Beads> rozmiary = rozmiaryDao.listBeads();
+		
+		assert(rozmiary.size() > 0);
+		System.out.println("Rozmiary by rozmiar size: " + rozmiary.size());
+		
+		for(Beads r: rozmiary)
+		{
+			System.out.println("Rozmiar: " + r.getSize());
+			System.out.println("Rozmiar: " + r.getImageUrl());
+		}
+		
 	}
 	
 	public void testSuperSearch()

@@ -46,11 +46,12 @@ public class CategoryController {
 	}
 
 	public ObservableList<Category> listChildren(Category parent) {
-		if (!childrenList.isEmpty()) {
-			childrenList.clear();
-		}
-		childrenList = FXCollections.observableList((List<Category>) categoryService.listChildren(parent));
-		return childrenList;
+		//if (!childrenList.isEmpty()) {
+		//	childrenList.clear();
+		//}
+		ObservableList<Category> chList = FXCollections.observableArrayList();
+		chList = FXCollections.observableList((List<Category>) categoryService.listChildren(parent));
+		return chList;
 	}
 
 	public ObservableList<String> getSubcategoriesNames(String categoryName) {
@@ -92,7 +93,9 @@ public class CategoryController {
 
 	public ObservableList<String> getMainCategoriesName() {
 
-		ObservableList<String> mainCategoriesNamesList = FXCollections.observableArrayList();
+		ObservableList<String> mainCategoriesNamesList = FXCollections.observableArrayList();		
+		
+		
 		for (Category c : listMainParents()) {
 			mainCategoriesNamesList.add(c.getCategoryName());
 		}

@@ -1,30 +1,24 @@
 package App.Model;
 
-import java.util.ArrayList;
-
-// Generated 2016-03-18 14:42:09 by Hibernate Tools 3.4.0.CR1
-
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+@SuppressWarnings("serial")
 @Entity
 @Table(name = "Category", schema = "dbo", catalog = "koraliki")
 public class Category implements java.io.Serializable {
 
-	private int idCategory;
+	private Integer idCategory;
 	private Category parentCategory;
 	private String categoryName;
 	private int categoryDepth;
@@ -32,18 +26,19 @@ public class Category implements java.io.Serializable {
 	private Set<Beads> beads = new HashSet<Beads>(0);
 
 	public Category() {
+
 	}
 
-	public Category (String categoryName){
+	public Category(String categoryName) {
 		this.categoryName = categoryName;
 	}
-	
+
 	public Category(String categoryName, int depth) {
 		this.categoryName = categoryName;
 		this.categoryDepth = depth;
 	}
-	
-	public Category(String categoryName, Category parentCategory ) {
+
+	public Category(String categoryName, Category parentCategory) {
 		this.categoryName = categoryName;
 		this.parentCategory = parentCategory;
 		this.categoryDepth = parentCategory.getDepth() + 1;
@@ -52,22 +47,27 @@ public class Category implements java.io.Serializable {
 	public Category(Category parentCategory, String categoryName, int depth, Set<Beads> beads) {
 		this.parentCategory = parentCategory;
 		this.categoryName = categoryName;
+		this.beads = beads;
 		this.categoryDepth = depth;
+	}
+
+	public Category(String categoryName, Set<Beads> beads) {
+		this.categoryName = categoryName;
 		this.beads = beads;
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "id_category", unique = true, nullable = false)
-	public int getidCategory() {
+
+	@Column(name = "idCategory", unique = true, nullable = false)
+	public Integer getIdCategory() {
 		return this.idCategory;
 	}
 
-	public void setidCategory(int idCategory) {
+	public void setIdCategory(Integer idCategory) {
 		this.idCategory = idCategory;
 	}
 
-	@Column(name = "category_name", nullable = false, length = 255)
+	@Column(name = "nameCategory", nullable = false, length = 80)
 	public String getCategoryName() {
 		return this.categoryName;
 	}
@@ -76,8 +76,8 @@ public class Category implements java.io.Serializable {
 		this.categoryName = categoryName;
 	}
 
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name = "category_parent", nullable = true)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "Category_idCategory")
 	public Category getParentCategory() {
 		return parentCategory;
 	}
@@ -95,8 +95,7 @@ public class Category implements java.io.Serializable {
 		this.categoryDepth = depth;
 	}
 
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "parentCategory")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "parentCategory")
 	public Set<Category> getChildrenCategories() {
 		return this.childrenCategories;
 	}
@@ -105,13 +104,34 @@ public class Category implements java.io.Serializable {
 		this.childrenCategories = childrenCategories;
 	}
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "category")
 	public Set<Beads> getBeads() {
 		return this.beads;
 	}
 
 	public void setBeads(Set<Beads> beads) {
 		this.beads = beads;
+	}
+
+	@Override
+	public String toString() {
+		return this.categoryName;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (!Category.class.isAssignableFrom(obj.getClass())) {
+			return false;
+		}
+		final Category other = (Category) obj;
+		if ((this.idCategory == null) ? (other.idCategory != null) : !this.idCategory.equals(other.idCategory)) {
+			return false;
+		}
+
+		return true;
 	}
 
 }

@@ -3,6 +3,8 @@ package App.Service;
 import java.util.List;
 
 import App.Model.Beads;
+import App.Model.Category;
+import App.Model.Color;
 import App.dao.BeadDAO;
 import App.dao.BeadDAOImpl;
 
@@ -44,13 +46,25 @@ public class BeadServiceImpl implements BeadService {
 	}
 
 	@Override
-	public List<Beads> listBeadsFotTable() {
-		return beadDAO.listBeadsFotTable();
+	public List<Beads> listBeadsForTable() {
+		return beadDAO.listBeadsForTable();
+	}
+
+
+
+	@Override
+	public List<Beads> listBeadsForTable(Category category) {
+		return beadDAO.listBeadsForTable(category);
+	}
+	
+	@Override
+	public List<Beads> listBeadsForTable(String categoryParent, String categoryChild) {
+		return beadDAO.listBeadsForTable(categoryParent, categoryChild);
 	}
 
 	@Override
-	public List<Beads> listBeadsFotTable(String categoryParent, String categoryChild) {
-		return beadDAO.listBeadsFotTable(categoryParent, categoryChild);
+	public List<Beads> listBeadsByColor(Color color) {
+		return beadDAO.listBeadsByColor(color);
 	}
 
 }

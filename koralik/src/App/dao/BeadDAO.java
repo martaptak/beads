@@ -3,6 +3,8 @@ package App.dao;
 import java.util.List;
 
 import App.Model.Beads;
+import App.Model.Category;
+import App.Model.Color;
 
 public interface BeadDAO {
 
@@ -12,6 +14,8 @@ public interface BeadDAO {
 	public void updateBeads(Beads beads);
 	public List<Beads> listBeadsBySize(String size);
 	public List<Beads> superSearch(String searchString);
-	public List<Beads> listBeadsFotTable();
-	public List<Beads> listBeadsFotTable(String categoryParent, String categoryChild);
+	public List<Beads> listBeadsForTable();
+	public List<Beads> listBeadsForTable(Category category);
+	public List<Beads> listBeadsForTable(String categoryParent, String categoryChild);
+	public List<Beads> listBeadsByColor(Color color);
 }

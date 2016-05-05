@@ -14,7 +14,16 @@
 	<table-filter match-name="Finish" match-catalog="koraliki"
 		match-schema="dbo">
 	</table-filter>
-	<table-filter match-name="Finish_Beads" match-catalog="koraliki"
+	<table-filter match-name="ColorFamily" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="beads_has_finish" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="productsinstores" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="stores" match-catalog="koraliki"
 		match-schema="dbo">
 	</table-filter>
 </hibernate-reverse-engineering>

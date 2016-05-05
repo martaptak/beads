@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
@@ -13,6 +13,8 @@ import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
 import App.Model.Beads;
+import App.Model.Category;
+import App.Model.Color;
 import App.Model.HibernateUtil;
 
 public class BeadDAOImpl implements BeadDAO {
@@ -92,20 +94,20 @@ public class BeadDAOImpl implements BeadDAO {
 		}
 
 		result = criteria.list();
-
+		s.close();
 		return result;
 
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Beads> listBeadsFotTable() {
+	public List<Beads> listBeadsForTable() {
 		List<Beads> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
 
-		String sql = "from Beads as bead " + "left join fetch bead.category as c "
-				+ "inner join fetch c.parentCategory " + "left join fetch bead.color";
+		String sql = "from Beads as bead " + "inner join fetch bead.category as c " + "join fetch c.parentCategory "
+				+ "inner join fetch bead.color";
 
 		list = s.createQuery(sql).list();
 		s.getTransaction().commit();
@@ -113,27 +115,9 @@ public class BeadDAOImpl implements BeadDAO {
 		return list;
 	}
 
-	/*
-	 * @SuppressWarnings("unchecked")
-	 * 
-	 * @Override public List<Beads> listBeadsFotTable(String categoryParent,
-	 * String categoryChild) { List<Beads> list = new ArrayList<>(); Session s =
-	 * HibernateUtil.openSession(); s.beginTransaction();
-	 * 
-	 * String sql = "from Beads as bead " +
-	 * "left join fetch bead.category as c " +
-	 * "inner join fetch c.parentCategory " + "left join fetch bead.color " +
-	 * "where c.categoryName = :categoryChild " +
-	 * "and c.parentCategory.categoryName = :categoryParent";
-	 * 
-	 * list = s.createQuery(sql) .setParameter(categoryChild, categoryChild)
-	 * .setParameter(categoryParent, categoryParent) .list();
-	 * s.getTransaction().commit(); s.close(); return list; }
-	 */
-
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Beads> listBeadsFotTable(String categoryParent, String categoryChild) {
+	public List<Beads> listBeadsForTable(String categoryParent, String categoryChild) {
 		List<Beads> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
@@ -143,6 +127,36 @@ public class BeadDAOImpl implements BeadDAO {
 				.add(Property.forName("categoryName").like(categoryParent, MatchMode.EXACT));
 
 		list = criteria.list();
+		s.close();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Beads> listBeadsForTable(Category category) {
+		List<Beads> list = new ArrayList<>();
+		Session s = HibernateUtil.openSession();
+		s.beginTransaction();
+		Query query = s.createQuery("FROM Beads as bead inner join fetch bead.category as c " + " left join fetch bead.finishes "
+				+ "join fetch c.parentCategory as p inner join fetch bead.color as col  WHERE c.idCategory=:id");
+		query.setParameter("id", category.getIdCategory());
+		list = query.list();
+		s.close();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Beads> listBeadsByColor(Color color) {
+		Session s = HibernateUtil.openSession();
+		s.beginTransaction();
+		List<Beads> list = new ArrayList<>();
+		Query query = s.createQuery("FROM Beads as bead inner join fetch bead.category as c " + "left join fetch bead.finishes "
+				+ "join fetch c.parentCategory inner join fetch bead.color as col WHERE col.idColor=:id");
+		query.setParameter("id", color.getIdColor());
+		list = query.list();
+		s.getTransaction().commit();
+		s.close();
 
 		return list;
 	}

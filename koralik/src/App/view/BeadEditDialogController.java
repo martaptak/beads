@@ -1,49 +1,110 @@
 package App.view;
 
-import App.BeadController;
 import App.CategoryController;
+import App.ColorController;
 import App.Model.Beads;
 import App.Model.Category;
+import App.Model.Color;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 public class BeadEditDialogController {
 
 	@FXML
-	private ChoiceBox<String> mainCategoryChoice;
+	private ComboBox<Category> mainCategoryChoice;
 	@FXML
-	private ChoiceBox<String> subcategoryChoice;
+	private ComboBox<Category> subcategoryChoice;
 	@FXML
-	private ChoiceBox<String> typeChoice;
+	private ComboBox<Category> typeChoice;
 	@FXML
-	private TextField colorTextField;
-	@FXML
-	private TextField colorFamilyTextField;
+	private ComboBox<Color> colorComboBox;
 	@FXML
 	private TextField sizeTextField;
 	@FXML
 	private TextField imageUrlTextField;
+	@FXML
+	private ComboBox<Boolean> ownedBox;
 
 	private Stage dialogStage;
 	private Beads bead;
 	private CategoryController categoryController = new CategoryController();
+	private ColorController colorController = new ColorController();
 	private boolean okClicked = false;
+
+	private ObservableList<Color> colors = (ObservableList<Color>) colorController.listColors();
+	private ObservableList<Boolean> options = FXCollections.observableArrayList(true, false);
 
 	@FXML
 	private void initialize() {
 
-		mainCategoryChoice.setItems(categoryController.getMainCategoriesName());
-		mainCategoryChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue,
-				newValue) -> subcategoryChoice.setItems(categoryController.getSubcategoriesNames(newValue)));
+		ownedBox.setConverter(new StringConverter<Boolean>() {
 
-		subcategoryChoice.getSelectionModel().selectedItemProperty().addListener(
-				(observable, oldValue, newValue) -> typeChoice.setItems(categoryController.getTypesNames(newValue, mainCategoryChoice.getValue())));
+			@Override
+			public String toString(Boolean bool) {
+				if (bool == null) {
+					return "";
+				} else if (bool == true) {
+					return "tak";
+				} else {
+					return "nie";
+				}
+
+			}
+
+			@Override
+			public Boolean fromString(String s) {
+				try {
+					if (s == "tak") {
+						return true;
+					} else {
+						return false;
+					}
+				} catch (NumberFormatException e) {
+					return null;
+				}
+			}
+
+		});
+
+		colorComboBox.setItems(colors);
+
+		ownedBox.setItems(options);
+
+		mainCategoryChoice.setItems(categoryController.listMainParents());
+		//mainCategoryChoice.getSelectionModel().selectedItemProperty().addListener((observable, oldValue,
+				//newValue) -> subcategoryChoice.setItems(categoryController.listChildren(newValue)));
+		
+		
+		mainCategoryChoice.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Category>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Category> observable,
+		            Category oldValue, Category newValue) {
+
+		    	subcategoryChoice.setItems(categoryController.listChildren(newValue));
+		    }
+		});
+
+		//subcategoryChoice.getSelectionModel().selectedItemProperty().addListener(
+				//(observable, oldValue, newValue) -> typeChoice.setItems(categoryController.listChildren(newValue)));
+		
+		subcategoryChoice.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Category>() {
+		    @Override
+		    public void changed(ObservableValue<? extends Category> observable,
+		            Category oldValue, Category newValue) {
+
+		    	ObservableList<Category> list = categoryController.listChildren(newValue);
+		    	typeChoice.setItems(list);
+		    }
+		});
 
 	}
 
@@ -53,14 +114,16 @@ public class BeadEditDialogController {
 
 	public void setBead(Beads bead) {
 		this.bead = bead;
-
-		mainCategoryChoice.setValue(bead.getMainCategoryName());
-		subcategoryChoice.setValue(bead.getSubcategoryName());
-		typeChoice.setValue(bead.getCategoryName());
-		colorTextField.setText(bead.getColorName());
-		colorFamilyTextField.setText(bead.getColorFamily());
+		
+		if(bead.getIdBeads() != null){
+		colorComboBox.setValue(bead.getColor());
 		sizeTextField.setText(bead.getSize());
 		imageUrlTextField.setText(bead.getImageUrl());
+		ownedBox.setValue(bead.getOwned());		
+		typeChoice.setValue(bead.getCategory());
+		subcategoryChoice.setValue(bead.getSubcategory());
+		mainCategoryChoice.setValue(bead.getParentCategory());
+		}
 
 	}
 
@@ -72,14 +135,13 @@ public class BeadEditDialogController {
 	private void handleOk() {
 		if (isInputValid()) {
 
-			bead.setMainCategoryName(mainCategoryChoice.getValue());
-			bead.setSubcategoryName(subcategoryChoice.getValue());
-			bead.setCategoryName(typeChoice.getValue());
-			bead.setColorName(colorTextField.getText());
-			bead.setColorFamily(colorFamilyTextField.getText());
+			bead.setCategory(typeChoice.getSelectionModel().getSelectedItem());
+			bead.setSubcategory(subcategoryChoice.getSelectionModel().getSelectedItem());
+			bead.setParentCategory(mainCategoryChoice.getSelectionModel().getSelectedItem());
+			bead.setColor(colorComboBox.getSelectionModel().getSelectedItem());
 			bead.setSize(sizeTextField.getText());
 			bead.setImageUrl(imageUrlTextField.getText());
-
+			bead.setOwned(ownedBox.getValue());
 			okClicked = true;
 			dialogStage.close();
 		}
@@ -93,12 +155,6 @@ public class BeadEditDialogController {
 	private boolean isInputValid() {
 		String errorMessage = "";
 
-		if (colorTextField.getText() == null || colorTextField.getText().length() == 0) {
-			errorMessage += "Nieprawid這wy kolor!\n";
-		}
-		if (colorFamilyTextField.getText() == null || colorFamilyTextField.getText().length() == 0) {
-			errorMessage += "Nieprawid這wa rodzinna kolorystyczna\n";
-		}
 		if (sizeTextField.getText() == null || sizeTextField.getText().length() == 0) {
 			errorMessage += "Nieprawid這wy rozmiar\n";
 		}
@@ -113,8 +169,8 @@ public class BeadEditDialogController {
 			// Show the error message.
 			Alert alert = new Alert(AlertType.ERROR);
 			alert.initOwner(dialogStage);
-			alert.setTitle("Invalid Fields");
-			alert.setHeaderText("Please correct invalid fields");
+			alert.setTitle("Niaprawid這we pola");
+			alert.setHeaderText("Popraw nieprawdi這we pola");
 			alert.setContentText(errorMessage);
 
 			alert.showAndWait();
@@ -122,5 +178,7 @@ public class BeadEditDialogController {
 			return false;
 		}
 	}
+	
+	
 
 }

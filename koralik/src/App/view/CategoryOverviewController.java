@@ -5,9 +5,10 @@ import App.CategoryController;
 import App.Main;
 import App.Model.Beads;
 import App.Model.Category;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
@@ -17,7 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class CategoryOverviewController {
 
 	@FXML
-	private TreeView<String> categoryTreeView = new TreeView<String>();
+	private TreeView<Category> categoryTreeView = new TreeView<Category>();
 	@FXML
 	private TableView<Beads> beadsTable;
 	@FXML
@@ -26,6 +27,10 @@ public class CategoryOverviewController {
 	private TableColumn<Beads, String> colorNameColumn;
 	@FXML
 	private TableColumn<Beads, String> finishColumn;
+	@FXML
+	private ContextMenu contextMenu;
+	@FXML
+	private MenuItem detail;
 
 	private Main mainApp;
 	private BeadController beadController = new BeadController();
@@ -40,18 +45,20 @@ public class CategoryOverviewController {
 
 		sizeColumn.setCellValueFactory(new PropertyValueFactory<Beads, String>("size"));
 		colorNameColumn.setCellValueFactory(new PropertyValueFactory<Beads, String>("colorName"));
-		finishColumn.setCellValueFactory(new PropertyValueFactory<Beads, String>("finishesNames"));
+		finishColumn.setCellValueFactory(new PropertyValueFactory<Beads, String>("FinishesNames"));
 		createTree();
-		//categoryTreeView.getSelectionModel().selectedItemProperty().addListener(
-				//(observable, oldValue, newValue) -> {System.out.println("blabla " + oldValue + " " + newValue.getParent().getValue());});
-		
+				
 		categoryTreeView.getSelectionModel().selectedItemProperty().addListener(
-				(observable, oldValue, newValue) -> beadsTable.getItems().setAll(beadController.listBeadsFotTable(
-						newValue.getParent().getValue(), newValue.getValue())));
+				(observable, oldValue, newValue) -> beadsTable.getItems().setAll(beadController.listBeadsForTable(
+						newValue.getValue())));
 		
+		detail.setOnAction(e -> {
+
+			Beads selectedBead = beadsTable.getSelectionModel().getSelectedItem();
+			mainApp.showBeadDetailDialog(selectedBead);
+
+		});
 		
-
-
 	}
 
 	public void setMainApp(Main mainApp) {
@@ -60,11 +67,11 @@ public class CategoryOverviewController {
 	}
 
 	private void createTree() {
-		TreeItem<String> root = new TreeItem<String>("Kategorie");
+		TreeItem<Category> root = new TreeItem<Category>(new Category("Kategorie"));
 
-		ObservableList<String> mainCategoriesNamesList = categoryController.getMainCategoriesName();
+		ObservableList<Category> mainCategoriesNamesList = categoryController.listMainParents();
 
-		for (String name : mainCategoriesNamesList) {
+		for (Category name : mainCategoriesNamesList) {
 			root.getChildren().add(createTreeMainItem(name));
 		}
 
@@ -74,28 +81,32 @@ public class CategoryOverviewController {
 
 	}
 
-	private TreeItem<String> createTreeMainItem(String name) {
-		TreeItem<String> mainCategory = new TreeItem<String>(name);
+	private TreeItem<Category> createTreeMainItem(Category name) {
+		TreeItem<Category> mainCategory = new TreeItem<Category>(name);
 
-		ObservableList<String> subcategoriesNamesList = categoryController.getSubcategoriesNames(name);
+		ObservableList<Category> subcategoriesNamesList = categoryController.listChildren(name);
 
-		for (String subcategory : subcategoriesNamesList) {
-			mainCategory.getChildren().add(createTreeSubcategoryItem(subcategory, name));
+		for (Category subcategory : subcategoriesNamesList) {
+			mainCategory.getChildren().add(createTreeSubcategoryItem(subcategory));
 		}
 
 		return mainCategory;
 	}
 
-	private TreeItem<String> createTreeSubcategoryItem(String subcategory, String main) {
-		TreeItem<String> subcategoryTree = new TreeItem<String>(subcategory);
+	private TreeItem<Category> createTreeSubcategoryItem(Category subcategory) {
+		TreeItem<Category> subcategoryTree = new TreeItem<Category>(subcategory);
 
-		ObservableList<String> typesNamesList = categoryController.getTypesNames(subcategory, main);
+		ObservableList<Category> typesNamesList = categoryController.listChildren(subcategory);
 
-		for (String type : typesNamesList) {
-			subcategoryTree.getChildren().add(new TreeItem<String>(type));
+		for (Category type : typesNamesList) {
+			subcategoryTree.getChildren().add(new TreeItem<Category>(type));
 		}
 
 		return subcategoryTree;
+	}
+	
+	public void selectCategory(Category category){
+		categoryTreeView.getSelectionModel().select(new TreeItem<Category>(category));
 	}
 
 }

@@ -3,6 +3,8 @@ package App;
 import java.util.List;
 
 import App.Model.Beads;
+import App.Model.Category;
+import App.Model.Color;
 import App.Service.BeadService;
 import App.Service.BeadServiceImpl;
 import javafx.collections.FXCollections;
@@ -13,8 +15,9 @@ public class BeadController {
 	private BeadService beadService = new BeadServiceImpl();
 	private ObservableList<Beads> beadList = FXCollections.observableArrayList();
 	private ObservableList<Beads> beadListBySize = FXCollections.observableArrayList();
-	private ObservableList<Beads> beadListForTable = FXCollections.observableArrayList();
+
 	private ObservableList<Beads> beadListForTableFiltred = FXCollections.observableArrayList();
+	private ObservableList<Beads> beadListByColor = FXCollections.observableArrayList();
 
 	public void addBead(Beads bead) {
 		beadService.addBead(bead);
@@ -45,24 +48,42 @@ public class BeadController {
 		return beadListBySize;
 	}
 
-	public List<Beads> listBeadsFotTable() {
+	public ObservableList<Beads> listBeadsForTable() {
 
-		if (!beadListForTable.isEmpty()) {
-			beadListForTable.clear();
-		}
-		beadListForTable = FXCollections.observableList((List<Beads>) beadService.listBeadsFotTable());
+		ObservableList<Beads> beadListForTable = FXCollections.observableArrayList();
+
+		beadListForTable = FXCollections.observableList((List<Beads>) beadService.listBeadsForTable());
 		return beadListForTable;
 
 	}
 
-	public List<Beads> listBeadsFotTable(String categoryParent, String categoryChild) {
+	public ObservableList<Beads> listBeadsForTable(Category category) {
+
+		ObservableList<Beads> beadListForTable = FXCollections.observableArrayList();
+		
+		beadListForTable = FXCollections.observableList((List<Beads>) beadService.listBeadsForTable(category));
+		return beadListForTable;
+
+	}
+
+	public ObservableList<Beads> listBeadsForTable(String categoryParent, String categoryChild) {
 		if (!beadListForTableFiltred.isEmpty()) {
 			beadListForTableFiltred.clear();
 		}
-		beadListForTableFiltred = FXCollections.observableList((List<Beads>) 
-				beadService.listBeadsFotTable(categoryParent, categoryChild));
+		beadListForTableFiltred = FXCollections
+				.observableList((List<Beads>) beadService.listBeadsForTable(categoryParent, categoryChild));
 
 		return beadListForTableFiltred;
+	}
+
+	public ObservableList<Beads> listBeadsByColor(Color color) {
+		if (!beadListByColor.isEmpty()) {
+			beadListByColor.clear();
+		}
+		beadListByColor = FXCollections.observableList((List<Beads>) beadService.listBeadsByColor(color));
+
+		return beadListByColor;
+
 	}
 
 }
