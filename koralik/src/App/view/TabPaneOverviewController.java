@@ -3,17 +3,13 @@ package App.view;
 import java.io.IOException;
 
 import App.Main;
-import App.Model.Beads;
 import App.Model.Category;
 import App.Model.Color;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
 public class TabPaneOverviewController {
 

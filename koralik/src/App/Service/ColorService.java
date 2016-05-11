@@ -3,7 +3,6 @@ package App.Service;
 import java.util.List;
 
 import App.Model.Color;
-import App.Model.ColorFamily;
 
 public interface ColorService {
 	

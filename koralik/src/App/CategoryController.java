@@ -14,7 +14,7 @@ public class CategoryController {
 
 	private CategoryService categoryService = new CategoryServiceImpl();
 	private ObservableList<Category> mainParentList = FXCollections.observableArrayList();
-	private ObservableList<Category> childrenList = FXCollections.observableArrayList();
+
 
 	public void create(String name) {
 		categoryService.create(name);
@@ -46,9 +46,7 @@ public class CategoryController {
 	}
 
 	public ObservableList<Category> listChildren(Category parent) {
-		//if (!childrenList.isEmpty()) {
-		//	childrenList.clear();
-		//}
+
 		ObservableList<Category> chList = FXCollections.observableArrayList();
 		chList = FXCollections.observableList((List<Category>) categoryService.listChildren(parent));
 		return chList;

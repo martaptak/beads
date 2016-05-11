@@ -8,7 +8,6 @@ import App.Model.Beads;
 import App.Model.ProductsInStores;
 import App.Model.Stores;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
