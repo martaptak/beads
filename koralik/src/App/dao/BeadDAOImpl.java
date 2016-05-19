@@ -11,6 +11,8 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import App.Model.Beads;
 import App.Model.Category;
@@ -100,6 +102,57 @@ public class BeadDAOImpl implements BeadDAO {
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<Beads> findBead(Element element) {
+		List<Beads> result = new ArrayList<Beads>();
+
+		String categoryName = element.getElementsByTagName("Category").item(0).getTextContent();
+		String subcategoryName = element.getElementsByTagName("Subcategory").item(0).getTextContent();
+		NodeList type = element.getElementsByTagName("Type");
+		String typeName = "";
+		if (type.item(0) != null){
+			typeName = element.getElementsByTagName("Type").item(0).getTextContent();
+		}				
+		String colorName = element.getElementsByTagName("Color").item(0).getTextContent();
+		String size = element.getElementsByTagName("Size").item(0).getTextContent();		
+
+		Session s = HibernateUtil.openSession();
+		s.beginTransaction();
+		Query query = null;
+		
+		if(type.item(0) != null){
+		
+		query= s.createQuery("FROM Beads as bead inner join fetch bead.category as c "
+					+ " left join fetch bead.finishes " + "join fetch c.parentCategory as p "
+					+ "join fetch p.parentCategory as pp " + "left join fetch bead.color as col "
+					+ " WHERE pp.categoryName=:categoryName " + "AND p.categoryName=:subcategoryName "
+					+ "AND c.categoryName=:typeName " + "AND col.colorName=:colorName " + "AND bead.size=:size");
+			
+		
+		query.setParameter("typeName", typeName);		
+		
+		}
+		
+		else{
+			query= s.createQuery("FROM Beads as bead inner join fetch bead.category as c "
+					+ " left join fetch bead.finishes " + "join fetch c.parentCategory as p "
+					+ "join fetch p.parentCategory as pp " + "left join fetch bead.color as col "
+					+ " WHERE pp.categoryName=:categoryName " + "AND p.categoryName=:subcategoryName "
+					+ "AND col.colorName=:colorName " + "AND bead.size=:size");
+			
+		}
+		
+		query.setParameter("colorName", colorName);		
+		query.setParameter("categoryName", categoryName);
+		query.setParameter("subcategoryName", subcategoryName);
+		query.setParameter("size", size);
+		result = query.list();
+		s.getTransaction().commit();
+		s.close();
+
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Beads> listBeadsForTable() {
 		List<Beads> list = new ArrayList<>();
@@ -107,7 +160,7 @@ public class BeadDAOImpl implements BeadDAO {
 		s.beginTransaction();
 
 		String sql = "from Beads as bead " + "inner join fetch bead.category as c " + "join fetch c.parentCategory "
-				+ "inner join fetch bead.color";
+				+ "inner join fetch bead.color " + "left join fetch bead.finishes";
 
 		list = s.createQuery(sql).list();
 		s.getTransaction().commit();
@@ -137,7 +190,8 @@ public class BeadDAOImpl implements BeadDAO {
 		List<Beads> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		Query query = s.createQuery("FROM Beads as bead inner join fetch bead.category as c " + " left join fetch bead.finishes "
+		Query query = s.createQuery("FROM Beads as bead inner join fetch bead.category as c "
+				+ " left join fetch bead.finishes "
 				+ "join fetch c.parentCategory as p inner join fetch bead.color as col  WHERE c.idCategory=:id");
 		query.setParameter("id", category.getIdCategory());
 		list = query.list();
@@ -151,8 +205,9 @@ public class BeadDAOImpl implements BeadDAO {
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
 		List<Beads> list = new ArrayList<>();
-		Query query = s.createQuery("FROM Beads as bead inner join fetch bead.category as c " + "left join fetch bead.finishes "
-				+ "join fetch c.parentCategory inner join fetch bead.color as col WHERE col.idColor=:id");
+		Query query = s.createQuery(
+				"FROM Beads as bead inner join fetch bead.category as c " + "left join fetch bead.finishes "
+						+ "join fetch c.parentCategory inner join fetch bead.color as col WHERE col.idColor=:id");
 		query.setParameter("id", color.getIdColor());
 		list = query.list();
 		s.getTransaction().commit();

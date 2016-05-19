@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -62,20 +63,37 @@ public class BeadDetailDialogController {
 		amountColumn.setCellValueFactory(new PropertyValueFactory<ProductsInStores, String>("amountWithUnit"));
 		urlColumn.setCellValueFactory(new PropertyValueFactory<ProductsInStores, Hyperlink>("url"));
 
-		storesTable.setRowFactory(ptoduct -> new TableRow<ProductsInStores>() {
+		storesTable.setRowFactory(product -> new TableRow<ProductsInStores>() {
 			@Override
 			public void updateItem(ProductsInStores item, boolean empty) {
 				super.updateItem(item, empty);
 				if (item == null) {
 					setStyle("");
 				} else if (item.getAvibility().equals(true)) {
-					setStyle("-fx-background-color: LightGreen;");
+					setStyle("-fx-background-color: #D4D7B7;");
 				} else {
 					setStyle("");
 				}
 			}
 		});
-
+		
+		
+	/*	storesTable.setRowFactory(tv -> {
+			TableRow<Beads> row = new TableRow<>();
+			row.setOnMouseClicked(event -> {
+				if (event.getClickCount() > 1 && (!row.isEmpty())) {
+					mainApp.showBeadDetailDialog(row.getItem());
+				}
+			});
+			return row;
+		}); */
+		
+	/*	urlColumn.setCellFactory(cv -> {
+			TableCell<ProductsInStores, Hyperlink> cell = new TableCell<>();
+			cell.getItem().setOnAction(arg0);
+			
+		}); 
+	*/
 		
 	}
 
@@ -143,6 +161,7 @@ public class BeadDetailDialogController {
 		boolean okClicked = showProductEditDialog(tempProduct);
 		if (okClicked) {
 			productsInStoresController.addProduct(tempProduct);
+			showStores(bead);
 
 		}
 	}

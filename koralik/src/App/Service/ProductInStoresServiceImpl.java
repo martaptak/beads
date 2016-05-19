@@ -39,4 +39,9 @@ public class ProductInStoresServiceImpl implements ProductInStoresService{
 		return productInStoresDAO.listProducts(bead);
 	}
 
+	@Override
+	public List<String> listOfUnits() {
+		return productInStoresDAO.listOfUnits();
+	}
+
 }

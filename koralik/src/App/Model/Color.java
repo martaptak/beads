@@ -20,7 +20,7 @@ import javax.persistence.Transient;
 @Table(name = "Color", schema = "dbo", catalog = "koraliki")
 public class Color implements java.io.Serializable {
 
-	private int idColor;
+	private Integer idColor;
 	private String colorName;
 	private String colorCode;
 	private ColorFamily colorFamily;
@@ -31,12 +31,23 @@ public class Color implements java.io.Serializable {
 		this.colorCode = null;
 	}
 
-	public Color(int idColor, String colorName) {
+	public Color(Integer idColor, String colorName) {
 		this.idColor = idColor;
 		this.colorName = colorName;
 	}
 
-	public Color(int idColor, String colorName, String colorCode, ColorFamily colorFamily, Set<Beads> beads) {
+	public Color(String colorName, String colorCode) {
+		this.colorName = colorName;
+		this.colorCode = colorCode;
+	}
+
+	public Color(String colorName, String colorCode, ColorFamily colorFamily) {
+		this.colorName = colorName;
+		this.colorCode = colorCode;
+		this.colorFamily = colorFamily;
+	}
+
+	public Color(Integer idColor, String colorName, String colorCode, ColorFamily colorFamily, Set<Beads> beads) {
 		this.idColor = idColor;
 		this.colorName = colorName;
 		this.colorCode = colorCode;
@@ -47,11 +58,11 @@ public class Color implements java.io.Serializable {
 	@Id
 	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "idColor", unique = true, nullable = false)
-	public int getIdColor() {
+	public Integer getIdColor() {
 		return this.idColor;
 	}
 
-	public void setIdColor(int idColor) {
+	public void setIdColor(Integer idColor) {
 		this.idColor = idColor;
 	}
 
@@ -91,7 +102,7 @@ public class Color implements java.io.Serializable {
 	public void setBeads(Set<Beads> beads) {
 		this.beads = beads;
 	}
-	
+
 	@Transient
 	public String getColorFamilyName() {
 		return colorFamily.getColorFamilyName();
@@ -100,9 +111,9 @@ public class Color implements java.io.Serializable {
 	public void setColorFamilyName(String colorFamily) {
 		this.colorFamily.setColorFamilyName(colorFamily);
 	}
-	
+
 	@Override
-	public String toString(){
+	public String toString() {
 		return this.getColorName() + " " + this.getColorCode();
 	}
 

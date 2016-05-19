@@ -21,4 +21,9 @@ public class ColorFamilyServiceImpl implements ColorFamilyService {
 		return colorFamilyDAO.listColorFamily();
 	}
 
+	@Override
+	public ColorFamily getDefaultColorFamily() {
+		return colorFamilyDAO.getDefaultColorFamily();
+	}
+
 }

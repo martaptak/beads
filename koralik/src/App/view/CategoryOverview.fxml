@@ -36,7 +36,7 @@
                      <contextMenu>
                         <ContextMenu fx:id="contextMenu">
                           <items>
-                            <MenuItem fx:id="detail" mnemonicParsing="false" text="Szczegóły" />
+                            <MenuItem fx:id="editBead" mnemonicParsing="false" text="Edytuj" />
                           </items>
                         </ContextMenu>
                      </contextMenu>

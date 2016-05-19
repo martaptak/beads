@@ -1,10 +1,13 @@
 package App.Model;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -33,7 +36,7 @@ public class Finish implements java.io.Serializable {
 	}
 
 	@Id
-
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "idFinish", unique = true, nullable = false)
 	public Integer getIdFinish() {
 		return this.idFinish;
@@ -65,4 +68,9 @@ public class Finish implements java.io.Serializable {
 		this.beads = beads;
 	}
 
+	
+	@Override
+	public String toString() {
+		return nameFinish;
+	}
 }

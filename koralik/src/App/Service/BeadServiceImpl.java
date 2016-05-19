@@ -2,6 +2,8 @@ package App.Service;
 
 import java.util.List;
 
+import org.w3c.dom.Element;
+
 import App.Model.Beads;
 import App.Model.Category;
 import App.Model.Color;
@@ -65,6 +67,11 @@ public class BeadServiceImpl implements BeadService {
 	@Override
 	public List<Beads> listBeadsByColor(Color color) {
 		return beadDAO.listBeadsByColor(color);
+	}
+
+	@Override
+	public List<Beads> findBead(Element element) {
+		return beadDAO.findBead(element);
 	}
 
 }

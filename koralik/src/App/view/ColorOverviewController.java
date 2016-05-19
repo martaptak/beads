@@ -18,6 +18,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -51,7 +52,11 @@ public class ColorOverviewController {
 	@FXML
 	private ContextMenu contextMenu;
 	@FXML
-	private MenuItem detail;
+	private MenuItem editColor;
+	@FXML
+	private MenuItem deleteColor;
+	@FXML
+	private MenuItem editBead;
 
 	private BeadController beadController = new BeadController();
 	private ColorController colorController = new ColorController();
@@ -92,10 +97,35 @@ public class ColorOverviewController {
 		colorTable.getSelectionModel().selectedItemProperty()
 				.addListener((observable, oldValue, newValue) -> showBeads(newValue));
 
-		detail.setOnAction(e -> {
+		editColor.setOnAction(e -> {
 
+			Color selectedColor = colorTable.getSelectionModel().getSelectedItem();
+			boolean okClicked = mainApp.showColorEditDialog(selectedColor);
+			if (okClicked) {
+				colorController.updateColor(selectedColor);
+				colorTable.setItems(sortedData);
+			}
+
+		});
+
+		beadTable.setRowFactory(e -> {
+			TableRow<Beads> row = new TableRow<>();
+			row.setOnMouseClicked(event -> {
+				if (event.getClickCount() == 2 && (!row.isEmpty())) {
+					mainApp.showBeadDetailDialog(row.getItem());
+				}
+			});
+			return row;
+		});
+
+		editBead.setOnAction(e -> {
 			Beads selectedBead = beadTable.getSelectionModel().getSelectedItem();
-			mainApp.showBeadDetailDialog(selectedBead);
+
+			boolean okClicked = mainApp.showBeadEditDialog(selectedBead);
+			if (okClicked) {
+				beadController.updateBead(selectedBead);
+				beadTable.getItems().setAll(beadController.listBeadsForTable());
+			}
 
 		});
 
@@ -128,7 +158,7 @@ public class ColorOverviewController {
 	public void selectColor(Color color) {
 		colorTable.requestFocus();
 		colorTable.getSelectionModel().select(color);
-		colorTable.getFocusModel().focus(null);
+		colorTable.getFocusModel().focus(colorTable.getSelectionModel().getSelectedIndex());
 	}
 
 }

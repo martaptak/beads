@@ -1,11 +1,17 @@
 package App.Model;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -20,6 +26,7 @@ public class Stores implements java.io.Serializable {
 	private String storeName;
 	private String website;
 	private Date updateDate;
+	private String country;
 	private Set<ProductsInStores> productsInStores = new HashSet<ProductsInStores>(0);
 
 	public Stores() {
@@ -32,15 +39,16 @@ public class Stores implements java.io.Serializable {
 		this.storeName = storeName;
 	}
 
-	public Stores(String storeName, String website, Date updateDate, Set<ProductsInStores> productsInStores) {
+	public Stores(String storeName, String website, Date updateDate, String country, Set<ProductsInStores> productsInStores) {
 		this.storeName = storeName;
 		this.website = website;
 		this.updateDate = updateDate;
+		this.country = country;
 		this.productsInStores = productsInStores;
 	}
 
 	@Id
-
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "idStores", unique = true, nullable = false)
 	public Integer getIdStores() {
 		return this.idStores;
@@ -66,6 +74,14 @@ public class Stores implements java.io.Serializable {
 
 	public void setWebsite(String website) {
 		this.website = website;
+	}
+	
+	@Column(name = "Country")
+	public String getCountry() {
+		return this.country;
+	}
+	public void setCountry(String country){
+		this.country = country;
 	}
 
 	@Temporal(TemporalType.DATE)

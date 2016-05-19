@@ -1,5 +1,6 @@
 package App.view;
 
+import App.ProductsInStoresController;
 import App.StoresController;
 import App.Model.ProductsInStores;
 import App.Model.Stores;
@@ -30,8 +31,9 @@ public class ProductEditDialogController {
 	private ProductsInStores product;
 	private boolean okClicked = false;
 	private StoresController storesController = new StoresController();
+	private ProductsInStoresController productsInStoresController = new ProductsInStoresController();
 	private ObservableList<Boolean> options = FXCollections.observableArrayList(true, false);
-	private ObservableList<String> units = FXCollections.observableArrayList("g", "szt");
+	private ObservableList<String> units = productsInStoresController.listOfUnits();
 
 	@FXML
 	private void initialize() {
@@ -95,7 +97,7 @@ public class ProductEditDialogController {
 		if (isInputValid()) {
 
 			product.setStores(stores.getSelectionModel().getSelectedItem());
-			product.setAmount(Integer.valueOf(amount.getText()));
+			product.setAmount(amount.getText());
 			product.setUnit(unit.getSelectionModel().getSelectedItem());
 			product.setWebsite(website.getText());
 			product.setAvibility(avibility.getSelectionModel().getSelectedItem());

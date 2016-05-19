@@ -103,6 +103,16 @@ public class CategoryDAOImpl implements CategoryDAO {
 
 	}
 
+	@Override
+	public void add(Category category) {
+		Session s = HibernateUtil.openSession();
+		s.beginTransaction();
+		s.save(category);
+		s.getTransaction().commit();
+		s.close();
+		
+	}
+
 
 
 }

@@ -7,9 +7,8 @@ import App.Model.Category;
 public interface CategoryDAO {
 
 	public void create(String name);
-
 	public void create(String name, Category parent);
-
+	public void add(Category category);
 	public void update(Category category);
 
 	public Category getByName(String name);

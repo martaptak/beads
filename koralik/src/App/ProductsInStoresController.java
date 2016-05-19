@@ -41,5 +41,11 @@ public class ProductsInStoresController {
 		productsList = FXCollections.observableList(productInStoresService.listProducts(bead));
 		return productsList;
 	}
+	
+	public ObservableList<String> listOfUnits() {
+		ObservableList<String> unitList = FXCollections.observableList(productInStoresService.listOfUnits());
+		return unitList;
+		
+	}
 
 }

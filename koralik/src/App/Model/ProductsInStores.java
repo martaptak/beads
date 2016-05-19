@@ -1,8 +1,11 @@
 package App.Model;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -19,10 +22,12 @@ public class ProductsInStores implements java.io.Serializable {
 	private Integer idProductInStores;
 	private Beads beads;
 	private Stores stores;
-	private Integer amount;
+	private String amount;
 	private String unit;
 	private Boolean avibility;
 	private String website;
+	private String name;
+	private String image;
 
 	public ProductsInStores() {
 		
@@ -38,7 +43,7 @@ public class ProductsInStores implements java.io.Serializable {
 		
 	}
 
-	public ProductsInStores(Integer idProductInStores, Beads beads, Stores stores, Integer amount, String unit,
+	public ProductsInStores(Integer idProductInStores, Beads beads, Stores stores, String amount, String unit,
 			String website) {
 		this.idProductInStores = idProductInStores;
 		this.beads = beads;
@@ -48,8 +53,8 @@ public class ProductsInStores implements java.io.Serializable {
 		this.website = website;
 	}
 
-	public ProductsInStores(Integer idProductInStores, Beads beads, Stores stores, Integer amount, String unit,
-			Boolean avibility, String website) {
+	public ProductsInStores(Integer idProductInStores, Beads beads, Stores stores, String amount, String unit,
+			Boolean avibility, String website, String name, String image) {
 		this.idProductInStores = idProductInStores;
 		this.beads = beads;
 		this.stores = stores;
@@ -57,10 +62,27 @@ public class ProductsInStores implements java.io.Serializable {
 		this.unit = unit;
 		this.avibility = avibility;
 		this.website = website;
+		this.name = name;
+		this.image = image;
+	}
+	
+	
+
+	public ProductsInStores(Beads beads, Stores stores, String amount, String unit, Boolean avibility, String website,
+			String name, String image) {
+		this.beads = beads;
+		this.stores = stores;
+		this.amount = amount;
+		this.unit = unit;
+		this.avibility = avibility;
+		this.website = website;
+		this.name = name;
+		this.image = image;
 	}
 
 	@Id
-
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@Basic(optional = false)
 	@Column(name = "idProductInStores", unique = true, nullable = false)
 	public Integer getIdProductInStores() {
 		return this.idProductInStores;
@@ -91,11 +113,11 @@ public class ProductsInStores implements java.io.Serializable {
 	}
 
 	@Column(name = "Amount", nullable = false)
-	public Integer getAmount() {
+	public String getAmount() {
 		return this.amount;
 	}
 
-	public void setAmount(Integer amount) {
+	public void setAmount(String amount) {
 		this.amount = amount;
 	}
 
@@ -125,6 +147,23 @@ public class ProductsInStores implements java.io.Serializable {
 	public void setWebsite(String website) {
 		this.website = website;
 	}
+	
+	@Column(name = "Name")
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Column(name = "Image")
+	public String getImage(){
+		return this.image;
+	}
+	
+	public void setImage(String image){
+		this.image = image;
+	}
 
 	@Transient
 	public String getAmountWithUnit() {
@@ -133,7 +172,7 @@ public class ProductsInStores implements java.io.Serializable {
 
 	public void setAmountWithUnit(String amountWithUnit) {
 		String[] split = amountWithUnit.split(" ");
-		this.amount = Integer.parseInt(split[0]);
+		this.amount = split[0];
 		this.unit = split[1];
 	}
 	@Transient

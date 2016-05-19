@@ -1,10 +1,13 @@
 package App.Model;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -27,7 +30,7 @@ public class ColorFamily implements java.io.Serializable {
 	}
 
 	@Id
-
+	@GeneratedValue(strategy = IDENTITY)
 	@Column(name = "idColorFamily", unique = true, nullable = false)
 	public Integer getIdColorFamily() {
 		return this.idColorFamily;

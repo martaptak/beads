@@ -3,9 +3,12 @@ package App.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 
 import App.Model.ColorFamily;
+import App.Model.Finish;
 import App.Model.HibernateUtil;
 
 public class ColorFamilyDAOImpl implements ColorFamilyDAO {
@@ -33,6 +36,19 @@ public class ColorFamilyDAOImpl implements ColorFamilyDAO {
 		s.close();
 
 		return list;
+	}
+
+	@Override
+	public ColorFamily getDefaultColorFamily() {
+
+		Session s = HibernateUtil.openSession();
+
+		s.beginTransaction();
+		ColorFamily colorFamily = (ColorFamily) s.load(ColorFamily.class, 11);
+		s.getTransaction().commit();
+		s.close();
+
+		return colorFamily;
 	}
 
 }

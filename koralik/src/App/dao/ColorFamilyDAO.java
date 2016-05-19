@@ -8,4 +8,5 @@ public interface ColorFamilyDAO {
 
 	public void updateColorFamily(ColorFamily colorFamily);
 	public List<ColorFamily> listColorFamily();
+	public ColorFamily getDefaultColorFamily();
 }

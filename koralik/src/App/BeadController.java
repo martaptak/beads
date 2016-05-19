@@ -2,6 +2,8 @@ package App;
 
 import java.util.List;
 
+import org.w3c.dom.Element;
+
 import App.Model.Beads;
 import App.Model.Category;
 import App.Model.Color;
@@ -84,6 +86,15 @@ public class BeadController {
 
 		return beadListByColor;
 
+	}
+	
+	public List<Beads> findBead(Element element){
+		
+		ObservableList<Beads> beadsFound = FXCollections.observableArrayList();
+
+		beadsFound = FXCollections.observableList((List<Beads>) beadService.findBead(element));
+		return beadsFound;
+		
 	}
 
 }

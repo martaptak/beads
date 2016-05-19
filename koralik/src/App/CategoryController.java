@@ -100,5 +100,9 @@ public class CategoryController {
 
 		return mainCategoriesNamesList;
 	}
+	
+	public void add(Category category){
+		categoryService.add(category);
+	}
 
 }

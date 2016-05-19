@@ -3,9 +3,14 @@ package App.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
+
 import App.Model.Beads;
+import App.Model.Category;
 import App.Model.HibernateUtil;
 import App.Model.ProductsInStores;
 
@@ -63,6 +68,20 @@ public class ProductInStoresDAOImpl implements ProductInStoresDAO {
 		Query query = s.createQuery("FROM ProductsInStores as s join fetch s.stores where s.beads=:bead");
 		query.setParameter("bead", bead);
 		list = query.list();
+		s.getTransaction().commit();
+		s.close();
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> listOfUnits() {
+		List<String> list = new ArrayList<>();
+		Session s = HibernateUtil.openSession();
+		s.beginTransaction();
+		Criteria criteria = s.createCriteria(ProductsInStores.class);
+		criteria.setProjection(Projections.distinct(Projections.property("unit")));
+		list = criteria.list();
 		s.getTransaction().commit();
 		s.close();
 		return list;

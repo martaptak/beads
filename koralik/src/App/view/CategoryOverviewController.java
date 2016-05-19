@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -30,7 +31,7 @@ public class CategoryOverviewController {
 	@FXML
 	private ContextMenu contextMenu;
 	@FXML
-	private MenuItem detail;
+	private MenuItem editBead;
 
 	private Main mainApp;
 	private BeadController beadController = new BeadController();
@@ -52,11 +53,19 @@ public class CategoryOverviewController {
 				(observable, oldValue, newValue) -> beadsTable.getItems().setAll(beadController.listBeadsForTable(
 						newValue.getValue())));
 		
-		detail.setOnAction(e -> {
-
+		editBead.setOnAction(e -> {
 			Beads selectedBead = beadsTable.getSelectionModel().getSelectedItem();
-			mainApp.showBeadDetailDialog(selectedBead);
-
+			mainApp.showBeadEditDialog(selectedBead);
+		});
+		
+		beadsTable.setRowFactory( e -> {
+		    TableRow<Beads> row = new TableRow<>();
+		    row.setOnMouseClicked(event -> {
+		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+		        	mainApp.showBeadDetailDialog(row.getItem());
+		        }
+		    });
+		    return row ;
 		});
 		
 	}

@@ -11,5 +11,6 @@ public interface ProductInStoresDAO {
 	public void removeProduct(Integer id);
 	public void updateProduct(ProductsInStores product);
 	public List<ProductsInStores> listProducts(Beads bead);
+	public List<String> listOfUnits();
 
 }

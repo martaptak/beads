@@ -2,9 +2,11 @@ package App;
 
 import java.io.IOException;
 import App.Model.Beads;
+import App.Model.Color;
 import App.Model.HibernateUtil;
 import App.view.BeadDetailDialogController;
 import App.view.BeadEditDialogController;
+import App.view.ColorEditDialogController;
 import App.view.TabPaneOverviewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -91,6 +93,7 @@ public class Main extends Application {
 
 			BeadEditDialogController controller = loader.getController();
 			controller.setDialogStage(dialogStage);
+			controller.setMainApp(this);
 			controller.setBead(bead);
 
 			dialogStage.showAndWait();
@@ -118,6 +121,7 @@ public class Main extends Application {
 
 			BeadDetailDialogController controller = loader.getController();
 			controller.setDialogStage(dialogStage);
+			
 			controller.setBead(bead);
 			
 
@@ -131,7 +135,34 @@ public class Main extends Application {
 
 	}
 		
+	public boolean showColorEditDialog(Color color) {
+		try {
 
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("view/ColorEditDialog.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Edytuj...");
+			dialogStage.initModality(Modality.WINDOW_MODAL);
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			dialogStage.setScene(scene);
+
+			ColorEditDialogController controller = loader.getController();
+			controller.setDialogStage(dialogStage);
+			
+			controller.setColor(color);
+
+			dialogStage.showAndWait();
+
+			return controller.isOkClicked();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}		
+	}
+	
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}

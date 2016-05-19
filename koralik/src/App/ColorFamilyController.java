@@ -25,4 +25,8 @@ public class ColorFamilyController {
 		colorFamilylist = FXCollections.observableList((List<ColorFamily>) colorFamilyService.listColorFamily());
 		return colorFamilylist;
 	}
+	
+	public ColorFamily getDefaultColorFamily(){
+		return colorFamilyService.getDefaultColorFamily();
+	}
 }
