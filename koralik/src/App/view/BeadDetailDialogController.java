@@ -15,7 +15,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -75,18 +74,9 @@ public class BeadDetailDialogController {
 					setStyle("");
 				}
 			}
-		});
+		});	
 		
-		
-	/*	storesTable.setRowFactory(tv -> {
-			TableRow<Beads> row = new TableRow<>();
-			row.setOnMouseClicked(event -> {
-				if (event.getClickCount() > 1 && (!row.isEmpty())) {
-					mainApp.showBeadDetailDialog(row.getItem());
-				}
-			});
-			return row;
-		}); */
+	
 		
 	/*	urlColumn.setCellFactory(cv -> {
 			TableCell<ProductsInStores, Hyperlink> cell = new TableCell<>();
@@ -183,6 +173,7 @@ public class BeadDetailDialogController {
 			ProductEditDialogController controller = loader.getController();
 			controller.setDialogStage(dialogStage);
 			controller.setProduct(product);
+			
 
 			dialogStage.showAndWait();
 

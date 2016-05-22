@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.Optional;
 
 import App.InsertData;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
 import javafx.stage.Stage;
 
@@ -24,7 +25,7 @@ public class UpdateOverviewController {
 	@FXML
 	private ComboBox<Stores> storesBox;
 	@FXML
-	private ProgressIndicator progressIndicator;
+	private ProgressBar progressBar;
 	@FXML
 	private Label progressLabel;
 	@FXML
@@ -77,9 +78,23 @@ public class UpdateOverviewController {
 
 	private void start() {
 		progress = State.IN_PROGRESS;
-		progressIndicator.setVisible(true);
+		progressBar.setVisible(true);
 		progressLabel.setVisible(true);
 		updateButton.setText("Przerwij");
+
+		Task<Void> task1 = new Task<Void>() {
+			@Override
+			public Void call() {
+				try {
+					InsertData.startScrapy(storesBox.getSelectionModel().getSelectedItem());
+				} catch (IOException e) {
+
+					e.printStackTrace();
+				}
+				return null;
+			}
+		};
+		Thread thread = new Thread(task1);
 
 		try {
 
@@ -96,11 +111,13 @@ public class UpdateOverviewController {
 			} else {
 				progressLabel
 						.setText("Pobieram dla: " + storesBox.getSelectionModel().getSelectedItem().getStoreName());
-				InsertData.startScrapy(storesBox.getSelectionModel().getSelectedItem());
+
+				progressBar.progressProperty().bind(task1.progressProperty());
+				thread.start();
 
 			}
 
-			if (progress == State.IN_PROGRESS) {
+			if (progress == State.IN_PROGRESS && !thread.isAlive()) {
 				progressLabel.setText("Pobieranie zakoñczone");
 				progress = State.DONE;
 				done();
@@ -118,7 +135,7 @@ public class UpdateOverviewController {
 		progress = State.START;
 		progressLabel.setText("Przerywanie procesu...");
 		InsertData.stopScrapy();
-		progressIndicator.setVisible(false);
+		progressBar.setVisible(false);
 		progressLabel.setVisible(false);
 		progressLabel.setText("Uruchamiam....");
 		updateButton.setText("Aktualizuj");
@@ -137,9 +154,7 @@ public class UpdateOverviewController {
 
 		if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
 
-		    
 		}
 
-		
 	}
 }

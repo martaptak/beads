@@ -1,8 +1,5 @@
 package App.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import App.CategoryController;
 import App.ColorController;
 import App.Main;
@@ -246,28 +243,15 @@ public class BeadEditDialogController {
 	}
 
 	@FXML
-	private void handleNewColor() {
-
-		//TODO napraw Marcioch !!
+	private void handleNewColor() {		
 		
 		Color newColor = new Color();
 		boolean okClicked = mainApp.showColorEditDialog(newColor);
 		if (okClicked) {
 			colorController.addColor(newColor);
-			colorComboBox.setItems(colors);
+			colorComboBox.getItems().add(newColor);			
 			colorComboBox.getSelectionModel().select(newColor);
 		}
 
 	}
-
-	private <T> void filterItems(String filter, ComboBox<T> comboBox, List<T> items) {
-		List<T> filteredItems = new ArrayList<>();
-		for (T item : items) {
-			if (item.toString().toLowerCase().contains(filter.toLowerCase())) {
-				filteredItems.add(item);
-			}
-		}
-		comboBox.setItems(FXCollections.observableArrayList(filteredItems));
-	}
-
 }

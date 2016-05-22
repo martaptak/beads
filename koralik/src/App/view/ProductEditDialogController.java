@@ -123,7 +123,7 @@ public class ProductEditDialogController {
 		if (unit.getSelectionModel().getSelectedItem() == null) {
 			errorMessage += "Wybierz jednostkê\n";
 		}
-		if (website.getText() == null || website.getText().length() == 0 || !website.getText().contains("www")) {
+		if (website.getText() == null || website.getText().length() == 0 || !website.getText().contains("http")) {
 			errorMessage += "Nieprawid³owy adres storny\n";
 		}
 

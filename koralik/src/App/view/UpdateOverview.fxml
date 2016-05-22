@@ -4,14 +4,13 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane prefHeight="255.0" prefWidth="558.0" stylesheets="@DarkTheme.css" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.view.UpdateOverviewController">
    <children>
-      <SplitPane dividerPositions="0.43873517786561267" orientation="VERTICAL" prefHeight="368.0" prefWidth="558.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="368.0" prefWidth="558.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="289.0" prefWidth="442.0">
                <children>
@@ -27,11 +26,7 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="240.0" prefWidth="556.0">
                <children>
                   <Label fx:id="progressLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="10.0" layoutY="69.0" prefHeight="47.0" prefWidth="537.0" text="Uruchamiam...." textAlignment="CENTER" visible="false" wrapText="true" />
-                  <ProgressIndicator fx:id="progressBar" layoutX="252.0" layoutY="14.0" visible="false">
-                     <effect>
-                        <ColorAdjust brightness="0.13" contrast="0.07" hue="-1.0" saturation="0.02" />
-                     </effect>
-                  </ProgressIndicator>
+                  <ProgressBar fx:id="progressBar" layoutX="106.0" layoutY="31.0" prefHeight="24.0" prefWidth="334.0" progress="0.0" visible="false" />
                </children>
             </AnchorPane>
         </items>

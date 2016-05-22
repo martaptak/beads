@@ -157,9 +157,8 @@ public class HomeOverviewController {
 
 		});
 
-		
 		beadsTable.setRowFactory(new Callback<TableView<Beads>, TableRow<Beads>>() {
-			
+
 			@Override
 			public TableRow<Beads> call(TableView<Beads> param) {
 				TableRow<Beads> row = new MyTableRowFormat();
@@ -171,33 +170,6 @@ public class HomeOverviewController {
 				return row;
 			}
 		});
-		
-		/*
-		beadsTable.setRowFactory(tv -> {
-			TableRow<Beads> row = new TableRow<>();
-			row.setOnMouseClicked(event -> {
-				if (event.getClickCount() > 1 && (!row.isEmpty())) {
-					mainApp.showBeadDetailDialog(row.getItem());
-				}
-			});
-			return row;
-		});
-
-		beadsTable.setRowFactory(bead -> new TableRow<Beads>() {
-
-			@Override
-			public void updateItem(Beads item, boolean empty) {
-				super.updateItem(item, empty);
-				if (item == null) {
-					setStyle("");
-				} else if (item.getOwned().booleanValue() == true) {
-					setStyle("-fx-background-color: #D4D7B7");
-				} else {
-					setStyle("");
-				}
-			};
-		});
-		*/
 
 	}
 
@@ -357,8 +329,7 @@ public class HomeOverviewController {
 	}
 }
 
-class MyTableRowFormat extends TableRow<Beads>
-{
+class MyTableRowFormat extends TableRow<Beads> {
 	@Override
 	protected void updateItem(Beads item, boolean empty) {
 		super.updateItem(item, empty);

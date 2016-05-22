@@ -8,7 +8,6 @@ import App.InsertData;
 import App.Main;
 import App.StoresController;
 import App.Model.Stores;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -19,7 +18,8 @@ public class RootLayoutController {
 	private Main mainApp;
 	private StoresController storesController = new StoresController();
 	private List<Stores> storesList = storesController.listStores();
-
+	
+	
 	public void setMainApp(Main mainApp) {
 		this.mainApp = mainApp;
 	}
@@ -68,6 +68,8 @@ public class RootLayoutController {
 
 	@FXML
 	private void handleUpdate() {
+				
+		mainApp.showUpdateDialog();
 
 	}
 

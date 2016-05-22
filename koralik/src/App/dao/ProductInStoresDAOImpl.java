@@ -7,10 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
-
 import App.Model.Beads;
-import App.Model.Category;
 import App.Model.HibernateUtil;
 import App.Model.ProductsInStores;
 

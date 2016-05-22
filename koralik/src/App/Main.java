@@ -1,13 +1,18 @@
 package App;
 
 import java.io.IOException;
+
+import com.sun.javafx.application.HostServicesDelegate;
+
 import App.Model.Beads;
 import App.Model.Color;
 import App.Model.HibernateUtil;
 import App.view.BeadDetailDialogController;
 import App.view.BeadEditDialogController;
 import App.view.ColorEditDialogController;
+import App.view.RootLayoutController;
 import App.view.TabPaneOverviewController;
+import App.view.UpdateOverviewController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,6 +26,7 @@ public class Main extends Application {
 
 	private Stage primaryStage;
 	private BorderPane rootLayout;
+
 
 	public static void main(String[] args) throws Exception {
 
@@ -54,7 +60,15 @@ public class Main extends Application {
 
 			Scene scene = new Scene(rootLayout);
 			primaryStage.setScene(scene);
+			
+			RootLayoutController controller = loader.getController();
+			controller.setMainApp(this);
+			
 			primaryStage.show();
+			
+			
+			
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -161,6 +175,35 @@ public class Main extends Application {
 			e.printStackTrace();
 			return false;
 		}		
+	}
+	
+	public void showUpdateDialog(){
+		try {
+		
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(Main.class.getResource("view/UpdateOverview.fxml"));
+		AnchorPane page = (AnchorPane) loader.load();
+
+		Stage dialogStage = new Stage();
+		dialogStage.setTitle("Aktualizacja stanów sklepów");
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		dialogStage.initOwner(primaryStage);
+		Scene scene = new Scene(page);
+		dialogStage.setScene(scene);
+		
+		UpdateOverviewController controller = loader.getController();
+		
+		controller.setDialogStage(dialogStage);
+		
+		
+		dialogStage.showAndWait();
+		
+		
+		} catch (IOException e) {
+			e.printStackTrace();
+			
+		}
+		
 	}
 	
 	public Stage getPrimaryStage() {

@@ -140,10 +140,12 @@ public class InsertData {
 	}
 
 	public static void startScrapy(Stores store) throws IOException {
+		
+		System.out.println(store.getStoreName().toLowerCase());
 
 		builder = new ProcessBuilder("cmd.exe", "/c",
-				"cd \"C:\\Users\\marta\\git\\koraliki\\koralik\\scrapy scripts\\marta\" && scrapy crawl "
-						+ store.getStoreName());
+				"cd \"C:\\Users\\marta\\git\\koraliki\\koralik\\scrapyScripts\\marta\" && scrapy crawl "
+						+ store.getStoreName().toLowerCase());
 		builder.redirectErrorStream(true);
 		process = builder.start();
 		BufferedReader r = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -240,7 +242,11 @@ public class InsertData {
 		List<Color> colorList = colorController.listColors();
 
 		for (Color color : colorList) {
-			if (color.getColorCode().equals(code) && color.getColorName().equals(colorName)) {
+			
+			String color1 = colorName.replaceAll("[^\\p{L}\\p{Z}]","");
+			String color2 = color.getColorName().replaceAll("[^\\p{L}\\p{Z}]","");
+			
+			if (color.getColorCode().equals(code) && color2.equals(color1)) {
 				return color;
 			}
 		}

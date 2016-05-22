@@ -3,12 +3,8 @@ package App.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
-
 import App.Model.ColorFamily;
-import App.Model.Finish;
 import App.Model.HibernateUtil;
 
 public class ColorFamilyDAOImpl implements ColorFamilyDAO {

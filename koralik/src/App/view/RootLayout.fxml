@@ -23,8 +23,8 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Sklepy">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#handleNewElements" text="Nowe elementy" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleUpdate" text="Aktualizacja bazy" />
+              <MenuItem mnemonicParsing="false" onAction="#handleNewElements" text="Aktualizacja bazy" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleUpdate" text="Pobranie stanu obecnego sklepów" />
             </items>
           </Menu>
         </menus>
