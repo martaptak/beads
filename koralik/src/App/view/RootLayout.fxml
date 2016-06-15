@@ -16,9 +16,11 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Edycja">
             <items>
-                  <MenuItem mnemonicParsing="false" onAction="#handleEditColors" text="Edytuj kategorie" />
-              <MenuItem mnemonicParsing="false" onAction="#handleEditColors" text="Edytuj  kolory" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleEditBase" text="Edytuj kolory bazowe" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleEditFinish" text="Edytuj Finish" />
+              <MenuItem mnemonicParsing="false" onAction="#handleEditColors" text="Edytuj  rodziny kolorystyczne" />
                   <MenuItem mnemonicParsing="false" onAction="#handleEditStores" text="Edycja sklepów" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleEditCoatings" text="Edytuj powloki" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Sklepy">

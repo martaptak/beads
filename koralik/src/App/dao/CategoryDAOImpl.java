@@ -2,10 +2,15 @@ package App.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
+import App.Model.Bead;
 import App.Model.Category;
 import App.Model.HibernateUtil;
 
@@ -41,6 +46,18 @@ public class CategoryDAOImpl implements CategoryDAO {
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
 		s.update(category);
+		s.getTransaction().commit();
+		s.close();
+
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void removeCategory(Category c) {
+		Session s = HibernateUtil.openSession();
+		s.beginTransaction();
+		
+		s.delete(c);
 		s.getTransaction().commit();
 		s.close();
 
@@ -83,7 +100,13 @@ public class CategoryDAOImpl implements CategoryDAO {
 		List<Category> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		list = s.createQuery("FROM Category K WHERE K.depth = 0").list();
+
+		Criteria criteria = s.createCriteria(Category.class, "category");
+		criteria.add(Restrictions.eq("category.depth", 0));
+		criteria.addOrder(Order.asc("category.categoryName"));
+		list = criteria.list();
+
+		// list = s.createQuery("FROM Category K WHERE K.depth = 0").list();
 		s.getTransaction().commit();
 		s.close();
 		return list;
@@ -96,7 +119,14 @@ public class CategoryDAOImpl implements CategoryDAO {
 		List<Category> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		list = s.createQuery("FROM Category K WHERE parentCategory=:parent").setParameter("parent", parent).list();
+
+		Criteria criteria = s.createCriteria(Category.class, "category");
+		criteria.add(Restrictions.eq("category.parentCategory", parent));
+		criteria.addOrder(Order.asc("category.categoryName"));
+		list = criteria.list();
+
+		// list = s.createQuery("FROM Category K WHERE
+		// parentCategory=:parent").setParameter("parent", parent).list();
 		s.getTransaction().commit();
 		s.close();
 		return list;
@@ -110,9 +140,9 @@ public class CategoryDAOImpl implements CategoryDAO {
 		s.save(category);
 		s.getTransaction().commit();
 		s.close();
-		
+
 	}
 
-
+	
 
 }

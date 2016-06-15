@@ -3,13 +3,15 @@ package App.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 
-import App.Model.Beads;
+import App.Model.Bead;
 import App.Model.Color;
 import App.Model.HibernateUtil;
 
@@ -32,13 +34,13 @@ public class ColorDAOImpl implements ColorDAO {
 		int keeperID = color1.getIdColor();
 		int gonerID = color2.getIdColor();
 
-		List<Beads> temp = new ArrayList<Beads>();
+		List<Bead> temp = new ArrayList<Bead>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		Query query = s.createQuery("FROM Beads as bead join fetch bead.color as c WHERE c.idColor=:id");
+		Query query = s.createQuery("FROM Bead as bead join fetch bead.color as c WHERE c.idColor=:id");
 		temp = query.setParameter("id", gonerID).list();
 
-		for (Beads c : temp) {
+		for (Bead c : temp) {
 			c.getColor().setIdColor(keeperID);
 			s.save(c);
 		}
@@ -58,13 +60,38 @@ public class ColorDAOImpl implements ColorDAO {
 
 	}
 
+	@Override
+	public void removeColor(Color color) {
+		Session s = HibernateUtil.openSession();
+		s.beginTransaction();
+		s.delete(color);
+		s.getTransaction().commit();
+		s.close();
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Color> listColors() {
 		List<Color> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		list = s.createQuery("FROM Color as color join fetch color.colorFamily").list();
+
+		/*Criteria criteria = s.createCriteria(Color.class, "color");
+		criteria.createAlias("color.colorFamily", "colorFamily");
+		criteria.createAlias("color.base", "base");
+		criteria.createAlias("color.coatings", "coating");
+		criteria.createAlias("color.synonims", "synonim");
+		criteria.addOrder(Order.asc("color.colorName"));
+		list = criteria.list();*/
+
+		Query query = s.createQuery("FROM Color as color " 
+				+ "join fetch color.colorFamily "
+				+ "left join fetch color.base "
+				+ "left join fetch color.coatings "
+				+ "left join fetch color.synonims");
+		
+		query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		list = query.list();
 		s.getTransaction().commit();
 		s.close();
 		return list;
@@ -106,10 +133,17 @@ public class ColorDAOImpl implements ColorDAO {
 		Session s = HibernateUtil.openSession();
 		List<Color> result = new ArrayList<Color>();
 		s.beginTransaction();
-		result = s
-				.createQuery(
-						"FROM Color as color join fetch color.colorFamily as family WHERE family.idColorFamily =:id")
-				.setParameter("id", id).list();
+		/*
+		 * result = s .createQuery(
+		 * "FROM Color as color join fetch color.colorFamily as family WHERE family.idColorFamily =:id"
+		 * ) .setParameter("id", id).list();
+		 */
+
+		Criteria criteria = s.createCriteria(Color.class, "color");
+		criteria.createAlias("color.colorFamily", "colorFamily");
+		criteria.add(Restrictions.eq("colorFamily.idColorFamily", id));
+		criteria.addOrder(Order.asc("color.colorName"));
+		result = criteria.list();
 
 		s.getTransaction().commit();
 		s.close();

@@ -28,6 +28,10 @@ public class ColorFamily implements java.io.Serializable {
 		this.colorFamilyName = colorFamilyName;
 		this.colors = colors;
 	}
+	
+	public ColorFamily(String colorFamilyName){
+		this.colorFamilyName = colorFamilyName;
+	}
 
 	@Id
 	@GeneratedValue(strategy = IDENTITY)

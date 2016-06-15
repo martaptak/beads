@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="495.0" prefWidth="421.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.view.PickBeadDialogController">
+   <children>
+      <SplitPane dividerPositions="0.7756563245823389" prefHeight="495.0" prefWidth="599.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <ListView fx:id="beadsList" layoutX="14.0" layoutY="73.0" prefHeight="493.0" prefWidth="290.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <VBox layoutX="11.0" layoutY="72.0" prefHeight="200.0" prefWidth="76.0" spacing="20.0">
+                     <children>
+                        <Button defaultButton="true" mnemonicParsing="false" onAction="#handleOk" prefHeight="31.0" prefWidth="66.0" text="OK" />
+                        <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefWidth="66.0" text="Cancel" />
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

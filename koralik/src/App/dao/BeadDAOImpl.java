@@ -14,7 +14,7 @@ import org.hibernate.criterion.Restrictions;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import App.Model.Beads;
+import App.Model.Bead;
 import App.Model.Category;
 import App.Model.Color;
 import App.Model.HibernateUtil;
@@ -22,7 +22,7 @@ import App.Model.HibernateUtil;
 public class BeadDAOImpl implements BeadDAO {
 
 	@Override
-	public void addBead(Beads bead) {
+	public void addBead(Bead bead) {
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
 		s.save(bead);
@@ -33,12 +33,14 @@ public class BeadDAOImpl implements BeadDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Beads> listBeads() {
+	public List<Bead> listBeads() {
 
-		List<Beads> list = new ArrayList<>();
+		List<Bead> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		list = s.createQuery("FROM Beads").list();
+		Criteria criteria = s.createCriteria(Bead.class);
+		criteria.addOrder(Order.desc("idBeads"));
+		list = criteria.list();
 		s.getTransaction().commit();
 		s.close();
 		return list;
@@ -48,7 +50,7 @@ public class BeadDAOImpl implements BeadDAO {
 	public void removeBeads(Integer id) {
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		Beads c = (Beads) s.load(Beads.class, id);
+		Bead c = (Bead) s.load(Bead.class, id);
 		s.delete(c);
 		s.getTransaction().commit();
 		s.close();
@@ -56,7 +58,7 @@ public class BeadDAOImpl implements BeadDAO {
 	}
 
 	@Override
-	public void updateBeads(Beads beads) {
+	public void updateBeads(Bead beads) {
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
 		s.update(beads);
@@ -67,11 +69,11 @@ public class BeadDAOImpl implements BeadDAO {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public List<Beads> listBeadsBySize(String size) {
+	public List<Bead> listBeadsBySize(String size) {
 		Session s = HibernateUtil.openSession();
-		List<Beads> result = new ArrayList<Beads>();
+		List<Bead> result = new ArrayList<Bead>();
 		s.beginTransaction();
-		result = s.createCriteria(Beads.class).add(Property.forName("size").like(size, MatchMode.ANYWHERE))
+		result = s.createCriteria(Bead.class).add(Property.forName("size").like(size, MatchMode.ANYWHERE))
 				.addOrder(Order.asc("size")).list();
 
 		s.getTransaction().commit();
@@ -81,13 +83,13 @@ public class BeadDAOImpl implements BeadDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Beads> superSearch(String searchString) {
-		List<Beads> result = new ArrayList<Beads>();
+	public List<Bead> superSearch(String searchString) {
+		List<Bead> result = new ArrayList<Bead>();
 
 		String[] searchTerms = searchString.split(" ");
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		Criteria criteria = s.createCriteria(Beads.class);
+		Criteria criteria = s.createCriteria(Bead.class);
 
 		for (String searchTerm : searchTerms) {
 			Criterion c = Restrictions.or(Property.forName("size").like(searchTerm, MatchMode.ANYWHERE),
@@ -102,50 +104,65 @@ public class BeadDAOImpl implements BeadDAO {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Beads> findBead(Element element) {
-		List<Beads> result = new ArrayList<Beads>();
+	public List<Bead> findBead(Element element) {
+		List<Bead> result = new ArrayList<Bead>();
 
 		String categoryName = element.getElementsByTagName("Category").item(0).getTextContent();
 		String subcategoryName = element.getElementsByTagName("Subcategory").item(0).getTextContent();
 		NodeList type = element.getElementsByTagName("Type");
 		String typeName = "";
-		if (type.item(0) != null){
+		if (type.item(0) != null) {
 			typeName = element.getElementsByTagName("Type").item(0).getTextContent();
-		}				
+		}
 		String colorName = element.getElementsByTagName("Color").item(0).getTextContent();
-		String size = element.getElementsByTagName("Size").item(0).getTextContent();		
+		String size = element.getElementsByTagName("Size").item(0).getTextContent();
 
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
 		Query query = null;
-		
-		if(type.item(0) != null){
-		
-		query= s.createQuery("FROM Beads as bead inner join fetch bead.category as c "
-					+ " left join fetch bead.finishes " + "join fetch c.parentCategory as p "
-					+ "join fetch p.parentCategory as pp " + "left join fetch bead.color as col "
-					+ " WHERE pp.categoryName=:categoryName " + "AND p.categoryName=:subcategoryName "
-					+ "AND c.categoryName=:typeName " + "AND col.colorName=:colorName " + "AND bead.size=:size");
-			
-		
-		query.setParameter("typeName", typeName);		
-		
+
+		if (type.item(0) != null) {
+			query = s.createQuery("FROM Bead as bead "
+					+ "inner join fetch bead.category as c " 
+					+ "left join fetch bead.finishes "
+					+ "left join  fetch c.parentCategory as p "
+					+ "left join fetch p.parentCategory "
+					+ "left join fetch bead.brands "
+					+ "left join fetch bead.shapes " 
+					+ "left join fetch bead.color as col "
+					+ " WHERE pp.categoryName=:categoryName " 
+					+ "AND p.categoryName=:subcategoryName "
+					+ "AND c.categoryName=:typeName " 
+					+ "AND col.colorName=:colorName " 
+					+ "AND bead.size=:size");
+
+			query.setParameter("typeName", typeName);
+
 		}
-		
-		else{
-			query= s.createQuery("FROM Beads as bead inner join fetch bead.category as c "
-					+ " left join fetch bead.finishes " + "join fetch c.parentCategory as p "
-					+ "join fetch p.parentCategory as pp " + "left join fetch bead.color as col "
-					+ " WHERE pp.categoryName=:categoryName " + "AND p.categoryName=:subcategoryName "
-					+ "AND col.colorName=:colorName " + "AND bead.size=:size");
-			
+
+		else {
+			query = s.createQuery("FROM Bead as bead "
+					+ "inner join fetch bead.category as c " 
+					+ "left join fetch bead.finishes "
+					+ "left join  fetch c.parentCategory as p "
+					+ "left join fetch p.parentCategory "
+					+ "left join fetch bead.brands "
+					+ "left join fetch bead.shapes " 
+					+ "left join fetch bead.color as col "
+					+ "WHERE pp.categoryName=:categoryName " 
+					+ "AND p.categoryName=:subcategoryName "
+					+ "AND col.colorName=:colorName " 
+					+ "AND bead.size=:size");
+
 		}
-		
-		query.setParameter("colorName", colorName);		
+
+		query.setParameter("colorName", colorName);
 		query.setParameter("categoryName", categoryName);
 		query.setParameter("subcategoryName", subcategoryName);
 		query.setParameter("size", size);
+		query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		result = query.list();
+
 		s.getTransaction().commit();
 		s.close();
 
@@ -154,15 +171,22 @@ public class BeadDAOImpl implements BeadDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Beads> listBeadsForTable() {
-		List<Beads> list = new ArrayList<>();
+	public List<Bead> listBeadsForTable() {
+		List<Bead> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
 
-		String sql = "from Beads as bead " + "inner join fetch bead.category as c " + "join fetch c.parentCategory "
-				+ "inner join fetch bead.color " + "left join fetch bead.finishes";
+		String sql = "FROM Bead as bead "
+				+ "left join fetch bead.category as c " 
+				+ "left join fetch bead.finishes "
+				+ "left join fetch c.parentCategory as p "
+				+ "left join fetch p.parentCategory "
+				+ "left join fetch bead.brands "
+				+ "left join fetch bead.shapes " 
+				+ "left join fetch bead.color as col ";
+		
+		list = s.createQuery(sql).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
 
-		list = s.createQuery(sql).list();
 		s.getTransaction().commit();
 		s.close();
 		return list;
@@ -170,46 +194,67 @@ public class BeadDAOImpl implements BeadDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Beads> listBeadsForTable(String categoryParent, String categoryChild) {
-		List<Beads> list = new ArrayList<>();
+	public List<Bead> listBeadsForTable(String categoryParent, String categoryChild) {
+		List<Bead> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		Criteria criteria = s.createCriteria(Beads.class).createCriteria("category")
+		Criteria criteria = s.createCriteria(Bead.class).createCriteria("category")
 				.add(Property.forName("categoryName").like(categoryChild, MatchMode.EXACT))
 				.createCriteria("parentCategory")
 				.add(Property.forName("categoryName").like(categoryParent, MatchMode.EXACT));
 
-		list = criteria.list();
+		list = criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
 		s.close();
 		return list;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Beads> listBeadsForTable(Category category) {
-		List<Beads> list = new ArrayList<>();
+	public List<Bead> listBeadsForTable(Category category) {
+		List<Bead> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		Query query = s.createQuery("FROM Beads as bead inner join fetch bead.category as c "
-				+ " left join fetch bead.finishes "
-				+ "join fetch c.parentCategory as p inner join fetch bead.color as col  WHERE c.idCategory=:id");
+		Query query = s.createQuery("FROM Bead as bead "
+						+ "inner join fetch bead.category as c " 
+						+ "left join fetch bead.finishes "
+						+ "left join  fetch c.parentCategory as p "
+						+ "left join fetch p.parentCategory "
+						+ "left join fetch bead.brands "
+						+ "left join fetch bead.shapes " 
+						+ "left join fetch bead.color as col "
+						+ "left join fetch bead.productsInStores as product "
+						+ "WHERE c.idCategory=:id "
+						+ "ORDER BY col.colorName");
 		query.setParameter("id", category.getIdCategory());
+		query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+	
 		list = query.list();
+
 		s.close();
 		return list;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Beads> listBeadsByColor(Color color) {
+	public List<Bead> listBeadsByColor(Color color) {
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		List<Beads> list = new ArrayList<>();
-		Query query = s.createQuery(
-				"FROM Beads as bead inner join fetch bead.category as c " + "left join fetch bead.finishes "
-						+ "join fetch c.parentCategory inner join fetch bead.color as col WHERE col.idColor=:id");
+		List<Bead> list = new ArrayList<>();
+		Query query = s
+				.createQuery("FROM Bead as bead "
+						+ "inner join fetch bead.category as c " 
+						+ "left join fetch bead.finishes "
+						+ "left join  fetch c.parentCategory as p "
+						+ "left join fetch p.parentCategory "
+						+ "left join fetch bead.brands "
+						+ "left join fetch bead.shapes " 
+						+ "left join fetch bead.color as col "
+						+ "WHERE col.idColor=:id "
+						);
 		query.setParameter("id", color.getIdColor());
+		query.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		list = query.list();
+
 		s.getTransaction().commit();
 		s.close();
 

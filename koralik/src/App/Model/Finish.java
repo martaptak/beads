@@ -21,7 +21,8 @@ public class Finish implements java.io.Serializable {
 
 	private Integer idFinish;
 	private String nameFinish;
-	private Set<Beads> beads = new HashSet<Beads>(0);
+	private String codeFinish;
+	private Set<Bead> beads = new HashSet<Bead>(0);
 
 	public Finish() {
 	}
@@ -30,8 +31,19 @@ public class Finish implements java.io.Serializable {
 		this.nameFinish = nameFinish;
 	}
 
-	public Finish(String nameFinish, Set<Beads> beads) {
+	public Finish(String nameFinish, Set<Bead> beads) {
 		this.nameFinish = nameFinish;
+		this.beads = beads;
+	}	
+
+	public Finish(String nameFinish, String codeFinish) {
+		this.nameFinish = nameFinish;
+		this.codeFinish = codeFinish;
+	}	
+
+	public Finish(String nameFinish, String codeFinish, Set<Bead> beads) {
+		this.nameFinish = nameFinish;
+		this.codeFinish = codeFinish;
 		this.beads = beads;
 	}
 
@@ -54,23 +66,35 @@ public class Finish implements java.io.Serializable {
 	public void setNameFinish(String nameFinish) {
 		this.nameFinish = nameFinish;
 	}
+	
+	@Column(name = "CodeFinish", nullable = true)
+	public String getCodeFinish() {
+		return codeFinish;
+	}
+
+	public void setCodeFinish(String codeFinish) {
+		this.codeFinish = codeFinish;
+	}
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "beads_has_finish", schema = "dbo", catalog = "koraliki", joinColumns = {
 			@JoinColumn(name = "Finish_idFinish", nullable = false, updatable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "Beads_IdBeads", nullable = false, updatable = false) })
 
-	public Set<Beads> getBeads() {
+	public Set<Bead> getBeads() {
 		return this.beads;
 	}
 
-	public void setBeads(Set<Beads> beads) {
+	public void setBeads(Set<Bead> beads) {
 		this.beads = beads;
 	}
 
 	
 	@Override
 	public String toString() {
-		return nameFinish;
+		if(codeFinish != null){
+			return codeFinish + " - " + nameFinish;
+		}
+		else return nameFinish;
 	}
 }

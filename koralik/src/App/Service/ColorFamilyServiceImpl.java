@@ -11,6 +11,17 @@ public class ColorFamilyServiceImpl implements ColorFamilyService {
 	private ColorFamilyDAO colorFamilyDAO = new ColorFamilyDAOImpl();
 
 	@Override
+	public void addColorFamily(ColorFamily colorFamily){
+		colorFamilyDAO.addColorFamily(colorFamily);
+	}
+	
+	@Override
+	public void removeColorFamily(ColorFamily colorFamily){
+		colorFamilyDAO.removeColorFamily(colorFamily);
+	}
+	
+	
+	@Override
 	public void updateColorFamily(ColorFamily colorFamily) {
 		colorFamilyDAO.updateColorFamily(colorFamily);
 		

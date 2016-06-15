@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import App.Main;
 import App.ProductsInStoresController;
-import App.Model.Beads;
+import App.Model.Bead;
 import App.Model.ProductsInStores;
-import App.Model.Stores;
+import App.Model.Store;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -26,13 +27,14 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class BeadDetailDialogController {
 
 	@FXML
 	private TableView<ProductsInStores> storesTable;
 	@FXML
-	private TableColumn<ProductsInStores, Stores> storeNameColumn;
+	private TableColumn<ProductsInStores, Store> storeNameColumn;
 	@FXML
 	private TableColumn<ProductsInStores, String> amountColumn;
 	@FXML
@@ -52,17 +54,17 @@ public class BeadDetailDialogController {
 	final WebEngine webEngine = browser.getEngine();
 	private Main mainApp;
 	private Stage dialogStage;
-	private Beads bead;
+	private Bead bead;
 	private ProductsInStoresController productsInStoresController = new ProductsInStoresController();
 
 	@FXML
 	private void initialize() {
 
-		storeNameColumn.setCellValueFactory(new PropertyValueFactory<ProductsInStores, Stores>("stores"));
+		storeNameColumn.setCellValueFactory(new PropertyValueFactory<ProductsInStores, Store>("stores"));
 		amountColumn.setCellValueFactory(new PropertyValueFactory<ProductsInStores, String>("amountWithUnit"));
 		urlColumn.setCellValueFactory(new PropertyValueFactory<ProductsInStores, Hyperlink>("url"));
 
-		storesTable.setRowFactory(product -> new TableRow<ProductsInStores>() {
+	storesTable.setRowFactory(product -> new TableRow<ProductsInStores>() {
 			@Override
 			public void updateItem(ProductsInStores item, boolean empty) {
 				super.updateItem(item, empty);
@@ -74,17 +76,59 @@ public class BeadDetailDialogController {
 					setStyle("");
 				}
 			}
-		});	
-		
+		});
 	
-		
-	/*	urlColumn.setCellFactory(cv -> {
-			TableCell<ProductsInStores, Hyperlink> cell = new TableCell<>();
-			cell.getItem().setOnAction(arg0);
-			
-		}); 
-	*/
-		
+	
+	/*urlColumn.setCellFactory(new Callback<TableColumn<ProductsInStores, Hyperlink>,TableCell<ProductsInStores, Hyperlink>>() {
+
+		@Override
+		public TableCell<ProductsInStores, Hyperlink> call(TableColumn<ProductsInStores, Hyperlink> param) {
+			TableCell<ProductsInStores, Hyperlink> cell =  new TableCell<ProductsInStores, Hyperlink>();
+			cell.setOnMouseClicked(event -> {
+				if ((!cell.isEmpty())) {
+					cell.getItem().setOnAction(e -> {
+						String s = cell.getItem().getTooltip().getText();
+						mainApp.getHostServices().showDocument(s);
+					});
+				}
+			});
+			return cell;
+		}
+	});*/
+
+	/*	urlColumn.setCellFactory(column -> {
+			return new TableCell<ProductsInStores, Hyperlink>() {
+
+			@Override
+				public void updateItem(Hyperlink item, boolean empty) {
+					super.updateItem(item, empty);
+					if (item == null || empty) {
+						
+					} else {
+						
+						item.setOnAction(event -> {
+							
+							String s = item.getTooltip().getText();
+							mainApp.getHostServices().showDocument(s);
+							event.consume();
+						});
+					}
+				}
+			};
+		});*/
+	
+	
+	
+/*	urlColumn.setCellFactory(column -> {
+		TableCell<ProductsInStores, Hyperlink> cell = new TableCell<ProductsInStores, Hyperlink>();
+
+		cell.getItem().setOnAction(event -> {
+			String s = cell.getItem().getTooltip().getText();
+			mainApp.getHostServices().showDocument(s);
+		});					
+		return cell;
+	});*/
+
 	}
 
 	public void setDialogStage(Stage dialogStage) {
@@ -96,14 +140,14 @@ public class BeadDetailDialogController {
 
 	}
 
-	public void setBead(Beads bead) {
+	public void setBead(Bead bead) {
 		this.bead = bead;
 		showBeadDetails(bead);
 		showStores(bead);
 
 	}
 
-	public void showBeadDetails(Beads bead) {
+	public void showBeadDetails(Bead bead) {
 		if (bead != null) {
 
 			typeLabel.setText(bead.getCategoryName());
@@ -122,7 +166,7 @@ public class BeadDetailDialogController {
 		}
 	}
 
-	public void showStores(Beads bead) {
+	public void showStores(Bead bead) {
 		storesTable.setItems((ObservableList<ProductsInStores>) productsInStoresController.listProducts(bead));
 	}
 
@@ -173,7 +217,6 @@ public class BeadDetailDialogController {
 			ProductEditDialogController controller = loader.getController();
 			controller.setDialogStage(dialogStage);
 			controller.setProduct(product);
-			
 
 			dialogStage.showAndWait();
 

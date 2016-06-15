@@ -1,7 +1,7 @@
 package App.view;
 
-import App.StoresController;
-import App.Model.Stores;
+import App.StoreController;
+import App.Model.Store;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -23,7 +23,7 @@ import javafx.stage.Stage;
 public class UpdateOverviewController {
 
 	@FXML
-	private ComboBox<Stores> storesBox;
+	private ComboBox<Store> storesBox;
 	@FXML
 	private ProgressBar progressBar;
 	@FXML
@@ -31,8 +31,8 @@ public class UpdateOverviewController {
 	@FXML
 	private Button updateButton;
 
-	private StoresController storesController = new StoresController();
-	private ObservableList<Stores> storesList = storesController.listStores();
+	private StoreController storesController = new StoreController();
+	private ObservableList<Store> storesList = storesController.listStores();
 	private Stage dialogStage;
 
 	private enum State {
@@ -45,7 +45,7 @@ public class UpdateOverviewController {
 	private void initialize() {
 
 		storesBox.getItems().setAll(storesList);
-		storesBox.getItems().add(0, new Stores("Wszystkie"));
+		storesBox.getItems().add(0, new Store("Wszystkie"));
 		storesBox.getSelectionModel().select(0);
 
 	}
@@ -100,7 +100,7 @@ public class UpdateOverviewController {
 
 			if (storesBox.getSelectionModel().getSelectedIndex() == 0) {
 
-				for (Stores s : storesList) {
+				for (Store s : storesList) {
 					progressLabel.setText("Pobieram dla: " + s.getStoreName());
 					InsertData.startScrapy(s);
 					if (progress == State.START) {

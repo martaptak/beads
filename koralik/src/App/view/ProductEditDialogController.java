@@ -1,9 +1,9 @@
 package App.view;
 
 import App.ProductsInStoresController;
-import App.StoresController;
+import App.StoreController;
 import App.Model.ProductsInStores;
-import App.Model.Stores;
+import App.Model.Store;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,7 +17,7 @@ import javafx.util.StringConverter;
 public class ProductEditDialogController {
 
 	@FXML
-	private ComboBox<Stores> stores;
+	private ComboBox<Store> stores;
 	@FXML
 	private TextField amount;
 	@FXML
@@ -30,7 +30,7 @@ public class ProductEditDialogController {
 	private Stage dialogStage;
 	private ProductsInStores product;
 	private boolean okClicked = false;
-	private StoresController storesController = new StoresController();
+	private StoreController storesController = new StoreController();
 	private ProductsInStoresController productsInStoresController = new ProductsInStoresController();
 	private ObservableList<Boolean> options = FXCollections.observableArrayList(true, false);
 	private ObservableList<String> units = productsInStoresController.listOfUnits();

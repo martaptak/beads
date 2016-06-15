@@ -2,7 +2,7 @@ package App;
 
 import java.util.List;
 
-import App.Model.Beads;
+import App.Model.Bead;
 import App.Model.ProductsInStores;
 import App.Service.ProductInStoresService;
 import App.Service.ProductInStoresServiceImpl;
@@ -34,7 +34,7 @@ public class ProductsInStoresController {
 		productInStoresService.updateProduct(product);
 	}
 	
-	public List<ProductsInStores> listProducts(Beads bead){
+	public List<ProductsInStores> listProducts(Bead bead){
 		if (!productsList.isEmpty()) {
 			productsList.clear();
 		}

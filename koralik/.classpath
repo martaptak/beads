@@ -6,5 +6,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Spring"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/SQLServer"/>
 	<classpathentry kind="con" path="org.eclipse.fx.ide.jdt.core.JAVAFX_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ControlsFX"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jaunt"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

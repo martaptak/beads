@@ -3,7 +3,7 @@ package App.test;
 
 import java.util.List;
 
-import App.Model.Beads;
+import App.Model.Bead;
 import App.dao.BeadDAO;
 import App.dao.BeadDAOImpl;
 
@@ -17,7 +17,7 @@ public class BeadTest {
 	
 	public void test1()
 	{
-		List<Beads> rozmiary = rozmiaryDao.listBeadsForTable();
+		List<Bead> rozmiary = rozmiaryDao.listBeadsForTable();
 		
 		assert(rozmiary.size() > 0);
 		System.out.println("Rozmiary size: " + rozmiary.size());
@@ -26,24 +26,24 @@ public class BeadTest {
 	
 	public void test2()
 	{
-		List<Beads> rozmiary = rozmiaryDao.listBeadsBySize("10/5mm");
+		List<Bead> rozmiary = rozmiaryDao.listBeadsBySize("10/5mm");
 		
 		assert(rozmiary.size() > 0);
 		System.out.println("Rozmiary by rozmiar size: " + rozmiary.size());
 		
-		for(Beads r: rozmiary)
+		for(Bead r: rozmiary)
 		{
 			System.out.println("Rozmiar: " + r.getSize());
 		}
 	}
 	
 	public void test3(){
-		List<Beads> rozmiary = rozmiaryDao.listBeads();
+		List<Bead> rozmiary = rozmiaryDao.listBeads();
 		
 		assert(rozmiary.size() > 0);
 		System.out.println("Rozmiary by rozmiar size: " + rozmiary.size());
 		
-		for(Beads r: rozmiary)
+		for(Bead r: rozmiary)
 		{
 			System.out.println("Rozmiar: " + r.getSize());
 			System.out.println("Rozmiar: " + r.getImageUrl());

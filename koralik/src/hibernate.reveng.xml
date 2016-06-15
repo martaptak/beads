@@ -26,4 +26,22 @@
 	<table-filter match-name="stores" match-catalog="koraliki"
 		match-schema="dbo">
 	</table-filter>
+	<table-filter match-name="Brands" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="Shapes" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="Countries" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="Base" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="Coatings" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
+	<table-filter match-name="Synonims" match-catalog="koraliki"
+		match-schema="dbo">
+	</table-filter>
 </hibernate-reverse-engineering>

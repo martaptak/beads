@@ -21,19 +21,17 @@ import javax.persistence.Transient;
 public class Color implements java.io.Serializable {
 
 	private Integer idColor;
+	private Coatings coatings;
+	private Base base;
 	private String colorName;
 	private String colorCode;
 	private ColorFamily colorFamily;
-	private Set<Beads> beads = new HashSet<Beads>(0);
+	private Set<Synonims> synonims = new HashSet<Synonims>(0);
+	private Set<Bead> beads = new HashSet<Bead>(0);
 
 	public Color() {
 		this.colorName = null;
 		this.colorCode = null;
-	}
-
-	public Color(Integer idColor, String colorName) {
-		this.idColor = idColor;
-		this.colorName = colorName;
 	}
 
 	public Color(String colorName, String colorCode) {
@@ -47,11 +45,29 @@ public class Color implements java.io.Serializable {
 		this.colorFamily = colorFamily;
 	}
 
-	public Color(Integer idColor, String colorName, String colorCode, ColorFamily colorFamily, Set<Beads> beads) {
-		this.idColor = idColor;
+	public Color( String colorName, String colorCode, ColorFamily colorFamily, Set<Bead> beads) {
 		this.colorName = colorName;
 		this.colorCode = colorCode;
 		this.colorFamily = colorFamily;
+		this.beads = beads;
+	}
+
+	public Color(Coatings coatings, Base base, String colorName, String colorCode, ColorFamily colorFamily) {
+		this.coatings = coatings;
+		this.base = base;
+		this.colorName = colorName;
+		this.colorCode = colorCode;
+		this.colorFamily = colorFamily;
+	}
+
+	public Color(Coatings coatings, Base base, String colorName, String colorCode, ColorFamily colorFamily,
+			Set<Synonims> synonims, Set<Bead> beads) {
+		this.coatings = coatings;
+		this.base = base;
+		this.colorName = colorName;
+		this.colorCode = colorCode;
+		this.colorFamily = colorFamily;
+		this.synonims = synonims;
 		this.beads = beads;
 	}
 
@@ -69,6 +85,26 @@ public class Color implements java.io.Serializable {
 	@Column(name = "color_name", nullable = false, length = 100)
 	public String getColorName() {
 		return this.colorName;
+	}
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idCoating")
+	public Coatings getCoatings() {
+		return this.coatings;
+	}
+
+	public void setCoatings(Coatings coatings) {
+		this.coatings = coatings;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "idBase")
+	public Base getBase() {
+		return this.base;
+	}
+
+	public void setBase(Base base) {
+		this.base = base;
 	}
 
 	public void setColorName(String colorName) {
@@ -95,12 +131,21 @@ public class Color implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "color")
-	public Set<Beads> getBeads() {
+	public Set<Bead> getBeads() {
 		return this.beads;
 	}
 
-	public void setBeads(Set<Beads> beads) {
+	public void setBeads(Set<Bead> beads) {
 		this.beads = beads;
+	}
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "color")
+	public Set<Synonims> getSynonims() {
+		return this.synonims;
+	}
+
+	public void setSynonims(Set<Synonims> synonims) {
+		this.synonims = synonims;
 	}
 
 	@Transient

@@ -2,26 +2,39 @@ package App;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import App.Model.Beads;
+import com.jaunt.Elements;
+import com.jaunt.JauntException;
+import com.jaunt.UserAgent;
+
+import App.Model.Bead;
 import App.Model.Category;
 import App.Model.Color;
 import App.Model.ProductsInStores;
-import App.Model.Stores;
+import App.Model.Store;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 
 public class InsertData {
 
-	private static List<Beads> beads;
+	private static List<Bead> beads;
 	private static BeadController beadController = new BeadController();
 	private static ProductsInStoresController productController = new ProductsInStoresController();
 	private static CategoryController categoryController = new CategoryController();
@@ -30,7 +43,7 @@ public class InsertData {
 	private static ProcessBuilder builder;
 	private static Process process;
 
-	public static int[] readXMLFile(Stores store, File xmlFile) {
+	public static int[] readXMLFile(Store store, File xmlFile) {
 
 		int count = 0;
 		int news = 0;
@@ -77,7 +90,7 @@ public class InsertData {
 
 					if (beads.size() == 1 && !checkIfExistes(website)) {
 
-						Beads bead = beads.get(0);
+						Bead bead = beads.get(0);
 
 						ProductsInStores product = new ProductsInStores(bead, store, amount, unit, true, website, name,
 								image);
@@ -118,7 +131,7 @@ public class InsertData {
 							colorController.addColor(newColor);
 						}
 
-						Beads newBead = new Beads(newColor, typeCategory, size, image, false);
+						Bead newBead = new Bead(newColor, typeCategory, size, image, false);
 						beadController.addBead(newBead);
 
 						ProductsInStores newProduct = new ProductsInStores(newBead, store, amount, unit, true, website,
@@ -139,7 +152,7 @@ public class InsertData {
 		return values;
 	}
 
-	public static void startScrapy(Stores store) throws IOException {
+	public static void startScrapy(Store store) throws IOException {
 		
 		System.out.println(store.getStoreName().toLowerCase());
 
@@ -253,4 +266,29 @@ public class InsertData {
 
 		return null;
 	}
+	
+	public static void preciosa(){
+		
+		try{
+			  UserAgent userAgent = new UserAgent();
+			  userAgent.settings.autoSaveAsHTML = true; 
+			  userAgent.visit("http://preciosa-ornela.com/en/products/828-pastel-coating?highlight=WyJjb2F0aW5nIl0=");
+			  Elements elements = (Elements) userAgent.doc.findFirst("<div id='myFlickr-gallery-1'>").findEvery("<a>");  
+			  
+			  System.out.println("Found " + elements.size() + " elements:");
+			  for(com.jaunt.Element element : elements){                               //iterate through Results
+			    
+				  
+				  
+				  
+			  } 
+			 
+			  
+			}
+			catch(JauntException e){         
+			  System.err.println(e);
+			}
+	}
+	
+	
 }

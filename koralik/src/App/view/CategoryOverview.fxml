@@ -15,7 +15,19 @@
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" stylesheets="@DarkTheme.css">
                <children>
-                  <TreeView fx:id="categoryTreeView" layoutX="14.0" layoutY="14.0" prefHeight="898.0" prefWidth="293.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <TreeView fx:id="categoryTreeView" layoutX="14.0" layoutY="14.0" prefHeight="898.0" prefWidth="293.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <contextMenu>
+                        <ContextMenu fx:id="treeMenu">
+                          <items>
+                            <MenuItem fx:id="addCategory" mnemonicParsing="false" text="Dodaj kategorie" />
+                              <MenuItem fx:id="removeCategory" mnemonicParsing="false" text="Usuń kategorie" />
+                              <MenuItem fx:id="editCategory" mnemonicParsing="false" text="Edytuj" />
+                              <MenuItem fx:id="changeCategory" mnemonicParsing="false" text="Zmień kategorie" />
+                              <MenuItem fx:id="moveCategory" mnemonicParsing="false" text="Przenieś kategorię" />
+                              <MenuItem fx:id="changeSize" mnemonicParsing="false" text="Zmień rozmiar w całej kategorii" />
+                          </items>
+                        </ContextMenu>
+                     </contextMenu></TreeView>
                </children>
                <styleClass>
                   <String fx:value="background" />
@@ -37,6 +49,8 @@
                         <ContextMenu fx:id="contextMenu">
                           <items>
                             <MenuItem fx:id="editBead" mnemonicParsing="false" text="Edytuj" />
+                              <MenuItem fx:id="deleteBead" mnemonicParsing="false" text="Usuń" />
+                              <MenuItem fx:id="mergeBead" mnemonicParsing="false" text="Połącz" />
                           </items>
                         </ContextMenu>
                      </contextMenu>

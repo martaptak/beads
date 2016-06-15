@@ -22,11 +22,13 @@ import javax.persistence.Transient;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "Beads", schema = "dbo", catalog = "koraliki")
-public class Beads implements java.io.Serializable {
+public class Bead implements java.io.Serializable {
 
 	private Integer idBeads;
 	private Color color;
 	private Category category;
+	private Shape shapes;
+	private Brand brands;
 	private String size;
 	private Boolean owned;
 	private String imageUrl;
@@ -35,17 +37,17 @@ public class Beads implements java.io.Serializable {
 	private Set<ProductsInStores> productsInStores = new HashSet<ProductsInStores>(0);
 	private Set<Finish> finishes = new HashSet<Finish>(0);
 
-	public Beads() {
+	public Bead() {
 
 	}
 
-	public Beads(Color color, Category category, String size) {
+	public Bead(Color color, Category category, String size) {
 		this.color = color;
 		this.category = category;
 		this.size = size;
 	}
 
-	public Beads(Color color, Category category, String size, Boolean owned, String imageUrl, Double amountOwned,
+	public Bead(Color color, Category category, String size, Boolean owned, String imageUrl, Double amountOwned,
 			Set<ProductsInStores> productsInStores, Set<Finish> finishes) {
 		this.color = color;
 		this.category = category;
@@ -57,17 +59,15 @@ public class Beads implements java.io.Serializable {
 		this.finishes = finishes;
 	}
 
-	public Beads(Color color, Category category, String size, String imageUrl, Boolean owned) {
+	public Bead(Color color, Category category, String size, String imageUrl, Boolean owned) {
 		this.color = color;
 		this.category = category;
 		this.size = size;
 		this.imageUrl = imageUrl;
 		this.owned = owned;
 	}
-	
-	
 
-	public Beads(Color color, Category category, String size, Boolean owned, String imageUrl, Double amountOwned,
+	public Bead(Color color, Category category, String size, Boolean owned, String imageUrl, Double amountOwned,
 			String unit) {
 		this.color = color;
 		this.category = category;
@@ -76,6 +76,32 @@ public class Beads implements java.io.Serializable {
 		this.imageUrl = imageUrl;
 		this.amountOwned = amountOwned;
 		this.unit = unit;
+	}
+
+	public Bead(Color color, Category category, Shape shapes, Brand brands, String size, Boolean owned, String imageUrl,
+			Double amountOwned, String unit, Set<ProductsInStores> productsInStores, Set<Finish> finishes) {
+		this.color = color;
+		this.category = category;
+		this.shapes = shapes;
+		this.brands = brands;
+		this.size = size;
+		this.owned = owned;
+		this.imageUrl = imageUrl;
+		this.amountOwned = amountOwned;
+		this.unit = unit;
+		this.productsInStores = productsInStores;
+		this.finishes = finishes;
+	}
+
+	public Bead(Color color, Category category, Shape shapes, Brand brands, String size, Set<Finish> finishes,
+			Double amountOwned) {
+		this.color = color;
+		this.category = category;
+		this.shapes = shapes;
+		this.brands = brands;
+		this.size = size;
+		this.finishes = finishes;
+		this.amountOwned = amountOwned;
 	}
 
 	@Id
@@ -97,6 +123,26 @@ public class Beads implements java.io.Serializable {
 
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Shapes_idShape")
+	public Shape getShapes() {
+		return this.shapes;
+	}
+
+	public void setShapes(Shape shapes) {
+		this.shapes = shapes;
+	}
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Brands_idBrand")
+	public Brand getBrands() {
+		return this.brands;
+	}
+
+	public void setBrands(Brand brands) {
+		this.brands = brands;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -144,7 +190,7 @@ public class Beads implements java.io.Serializable {
 	public void setAmountOwned(Double amountOwned) {
 		this.amountOwned = amountOwned;
 	}
-	
+
 	@Column(name = "Unit", length = 10)
 	public String getUnit() {
 		return this.unit;
@@ -159,7 +205,7 @@ public class Beads implements java.io.Serializable {
 		return this.productsInStores;
 	}
 
-	public void setproductsInStores(Set<ProductsInStores> productsInStores) {
+	public void setProductsInStores(Set<ProductsInStores> productsInStores) {
 		this.productsInStores = productsInStores;
 	}
 
@@ -177,7 +223,7 @@ public class Beads implements java.io.Serializable {
 
 	@Transient
 	public String getColorName() {
-		return color.getColorName();
+		return color.getColorName() + " - " + color.getColorCode();
 	}
 
 	public void setColorName(String colorName) {
@@ -186,7 +232,13 @@ public class Beads implements java.io.Serializable {
 
 	@Transient
 	public String getCategoryName() {
-		return category.getCategoryName();
+
+		if (category.getDepth() == 2) {
+			return category.getCategoryName();
+		} else {
+			return "";
+		}
+
 	}
 
 	public void setCategoryName(String categoryName) {
@@ -204,7 +256,13 @@ public class Beads implements java.io.Serializable {
 
 	@Transient
 	public String getSubcategoryName() {
-		return category.getParentCategory().getCategoryName();
+
+		if (category.getDepth() == 1) {
+			return category.getCategoryName();
+		} else {
+			return category.getParentCategory().getCategoryName();
+		}
+
 	}
 
 	public void setSubcategoryName(String subcategoryName) {
@@ -213,7 +271,13 @@ public class Beads implements java.io.Serializable {
 
 	@Transient
 	public String getMainCategoryName() {
-		return category.getParentCategory().getParentCategory().getCategoryName();
+
+		if (category.getDepth() == 1) {
+			return category.getParentCategory().getCategoryName();
+		} else {
+			return category.getParentCategory().getParentCategory().getCategoryName();
+		}
+
 	}
 
 	public void setMainCategoryName(String mainCategoryName) {
@@ -231,11 +295,33 @@ public class Beads implements java.io.Serializable {
 
 	@Transient
 	public Category getSubcategory() {
-		return category.getParentCategory();
+
+		if (category.getDepth() == 1) {
+			return category;
+		} else {
+			return category.getParentCategory();
+		}
+
 	}
 
 	public void setSubcategory(Category subcategory) {
+				
 		this.category.setParentCategory(subcategory);
+	}
+
+	@Transient
+	public Category getTypeCategory() {
+
+		if (category.getDepth() == 2) {
+			return category;
+		} else {
+			return null;
+		}
+
+	}
+
+	public void setTypeCategory(Category typeCategory) {
+		this.category = typeCategory;
 	}
 
 	@Transient
@@ -245,7 +331,7 @@ public class Beads implements java.io.Serializable {
 
 		for (Finish f : finishes) {
 
-			result.append(f.getNameFinish());
+			result.append(f.toString());
 			result.append(", ");
 
 		}
@@ -255,6 +341,18 @@ public class Beads implements java.io.Serializable {
 
 	public void setFinishesNames(String finish) {
 
+	}
+
+	public static Bead cloneBead(Bead bead) {
+		Bead clone = new Bead(bead.getColor(), bead.getCategory(), bead.getShapes(), bead.getBrands(), bead.getSize(),
+				bead.getFinishes(), 0.0);
+
+		return clone;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getCategoryName() + " " + this.getColor().toString() + " " + this.getFinishesNames();
 	}
 
 }

@@ -2,7 +2,7 @@ package App.Service;
 
 import java.util.List;
 
-import App.Model.Beads;
+import App.Model.Bead;
 import App.Model.ProductsInStores;
 import App.dao.ProductInStoresDAO;
 import App.dao.ProductInStoresDAOImpl;
@@ -35,7 +35,7 @@ public class ProductInStoresServiceImpl implements ProductInStoresService{
 	}
 
 	@Override
-	public List<ProductsInStores> listProducts(Beads bead) {
+	public List<ProductsInStores> listProducts(Bead bead) {
 		return productInStoresDAO.listProducts(bead);
 	}
 

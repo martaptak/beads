@@ -1,9 +1,12 @@
 package App;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
+import App.Model.Bead;
 import App.Model.Category;
 import App.Service.CategoryService;
 import App.Service.CategoryServiceImpl;
@@ -14,7 +17,7 @@ public class CategoryController {
 
 	private CategoryService categoryService = new CategoryServiceImpl();
 	private ObservableList<Category> mainParentList = FXCollections.observableArrayList();
-
+	private BeadController beadController = new BeadController();
 
 	public void create(String name) {
 		categoryService.create(name);
@@ -26,6 +29,45 @@ public class CategoryController {
 
 	public void update(Category category) {
 		categoryService.update(category);
+	}
+
+	/*
+	 * public void removeCategory(Integer id) {
+	 * categoryService.removeCategory(id); }
+	 */
+
+	public void removeCategory(Category c) {
+
+		Category parent = c.getParentCategory();
+		List<Bead> temp1 = new ArrayList<Bead>();
+		List<Category> temp2 = new ArrayList<Category>();
+		if (c.getDepth() != 0) {
+
+			temp1 = beadController.listBeadsForTable(c);
+
+			if (!temp1.isEmpty()) {
+				for (Bead bead : temp1) {
+					bead.setCategory(parent);
+					beadController.updateBead(bead);
+				}
+			}
+
+			temp2 = categoryService.listChildren(c);
+
+			if (!temp2.isEmpty()) {
+				for (Category category : temp2) {
+					category.setParentCategory(parent);
+					categoryService.update(category);
+				}
+			}
+			categoryService.removeCategory(c);
+		} else {
+			List<Category> children = categoryService.listChildren(c);
+
+			if (children.isEmpty()) {
+				categoryService.removeCategory(c);
+			}
+		}
 	}
 
 	public Category getByName(String name) {
@@ -91,17 +133,16 @@ public class CategoryController {
 
 	public ObservableList<String> getMainCategoriesName() {
 
-		ObservableList<String> mainCategoriesNamesList = FXCollections.observableArrayList();		
-		
-		
+		ObservableList<String> mainCategoriesNamesList = FXCollections.observableArrayList();
+
 		for (Category c : listMainParents()) {
 			mainCategoriesNamesList.add(c.getCategoryName());
 		}
 
 		return mainCategoriesNamesList;
 	}
-	
-	public void add(Category category){
+
+	public void add(Category category) {
 		categoryService.add(category);
 	}
 

@@ -13,10 +13,16 @@
   <property name="hibernate.show_sql">true</property>
   <mapping class="App.Model.Category"/>
   <mapping class="App.Model.Color"/>
-  <mapping class="App.Model.Beads"/>
+  <mapping class="App.Model.Bead"/>
   <mapping class="App.Model.ColorFamily"/>
   <mapping class="App.Model.Finish"/>
   <mapping class="App.Model.ProductsInStores"/>
-  <mapping class="App.Model.Stores"/>
+  <mapping class="App.Model.Store"/>
+  <mapping class="App.Model.Shape"/>
+  <mapping class="App.Model.Brand"/>
+  <mapping class="App.Model.Country"/>
+  <mapping class="App.Model.Base"/>
+  <mapping class="App.Model.Coatings"/>
+  <mapping class="App.Model.Synonims"/>
  </session-factory>
 </hibernate-configuration>

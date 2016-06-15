@@ -19,8 +19,8 @@ import javafx.scene.control.Hyperlink;
 public class ProductsInStores implements java.io.Serializable {
 
 	private Integer idProductInStores;
-	private Beads beads;
-	private Stores stores;
+	private Bead beads;
+	private Store stores;
 	private String amount;
 	private String unit;
 	private Boolean avibility;
@@ -32,9 +32,9 @@ public class ProductsInStores implements java.io.Serializable {
 		
 	}
 	
-	public ProductsInStores(Beads beads){
+	public ProductsInStores(Bead beads){
 		this.beads = beads;
-		this.stores = new Stores();
+		this.stores = new Store();
 		this.amount = null;
 		this.unit = null;
 		this.website = null;
@@ -42,7 +42,7 @@ public class ProductsInStores implements java.io.Serializable {
 		
 	}
 
-	public ProductsInStores(Integer idProductInStores, Beads beads, Stores stores, String amount, String unit,
+	public ProductsInStores(Integer idProductInStores, Bead beads, Store stores, String amount, String unit,
 			String website) {
 		this.idProductInStores = idProductInStores;
 		this.beads = beads;
@@ -52,7 +52,7 @@ public class ProductsInStores implements java.io.Serializable {
 		this.website = website;
 	}
 
-	public ProductsInStores(Integer idProductInStores, Beads beads, Stores stores, String amount, String unit,
+	public ProductsInStores(Integer idProductInStores, Bead beads, Store stores, String amount, String unit,
 			Boolean avibility, String website, String name, String image) {
 		this.idProductInStores = idProductInStores;
 		this.beads = beads;
@@ -67,7 +67,7 @@ public class ProductsInStores implements java.io.Serializable {
 	
 	
 
-	public ProductsInStores(Beads beads, Stores stores, String amount, String unit, Boolean avibility, String website,
+	public ProductsInStores(Bead beads, Store stores, String amount, String unit, Boolean avibility, String website,
 			String name, String image) {
 		this.beads = beads;
 		this.stores = stores;
@@ -93,21 +93,21 @@ public class ProductsInStores implements java.io.Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Beads_IdBeads", nullable = false)
-	public Beads getBeads() {
+	public Bead getBeads() {
 		return this.beads;
 	}
 
-	public void setBeads(Beads beads) {
+	public void setBeads(Bead beads) {
 		this.beads = beads;
 	}
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Stores_idStores", nullable = false)
-	public Stores getStores() {
+	public Store getStores() {
 		return this.stores;
 	}
 
-	public void setStores(Stores stores) {
+	public void setStores(Store stores) {
 		this.stores = stores;
 	}
 

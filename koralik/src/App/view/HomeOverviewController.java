@@ -4,15 +4,17 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import App.BeadController;
-import App.CategoryController;
+import App.BrandController;
 import App.ColorFamilyController;
 import App.FinishController;
 import App.Main;
-import App.Model.Beads;
-import App.Model.Category;
+import App.ShapeController;
+import App.Model.Bead;
+import App.Model.Brand;
 import App.Model.Color;
 import App.Model.ColorFamily;
 import App.Model.Finish;
+import App.Model.Shape;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,8 +22,8 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -36,19 +38,19 @@ import javafx.util.Callback;
 public class HomeOverviewController {
 
 	@FXML
-	private TableView<Beads> beadsTable;
+	private TableView<Bead> beadsTable;
 	@FXML
-	private TableColumn<Beads, String> categoryNameColumn;
+	private TableColumn<Bead, String> categoryNameColumn;
 	@FXML
-	private TableColumn<Beads, String> sizeColumn;
+	private TableColumn<Bead, String> sizeColumn;
 	@FXML
-	private TableColumn<Beads, String> colorNameColumn;
+	private TableColumn<Bead, String> colorNameColumn;
 	@FXML
-	private TableColumn<Beads, String> mainCategoryName;
+	private TableColumn<Bead, String> mainCategoryName;
 	@FXML
-	private TableColumn<Beads, String> subcategoryName;
+	private TableColumn<Bead, String> subcategoryName;
 	@FXML
-	private TableColumn<Beads, String> finishColumn;
+	private TableColumn<Bead, String> finishColumn;
 	@FXML
 	private TextField colorFiltr;
 	@FXML
@@ -58,11 +60,11 @@ public class HomeOverviewController {
 	@FXML
 	private ComboBox<String> ownedFiltr;
 	@FXML
-	private ComboBox<Category> mainCategoryFiltr;
+	private TextField categoryFiltr;
 	@FXML
-	private ComboBox<Category> subCategoryFiltr;
+	private ComboBox<Shape> shapeBox;
 	@FXML
-	private ComboBox<Category> typeFiltr;
+	private ComboBox<Brand> brandBox;
 	@FXML
 	private ComboBox<Finish> finishFiltr;
 	@FXML
@@ -71,29 +73,36 @@ public class HomeOverviewController {
 	private MenuItem category;
 	@FXML
 	private MenuItem colors;
+	@FXML
+	private MenuItem duplicate;
 
 	private BeadController beadController = new BeadController();
 	private ColorFamilyController colorFamilyController = new ColorFamilyController();
-	private CategoryController categoryController = new CategoryController();
 	private FinishController finishController = new FinishController();
-	private ObservableList<Beads> masterData = beadController.listBeadsForTable();
+	private ShapeController shapeController = new ShapeController();
+	private BrandController brandController = new BrandController();
+	private ObservableList<Bead> masterData = beadController.listBeadsForTable();
 	private ObservableList<String> options = FXCollections.observableArrayList("wszystkie", "tak", "nie");
-	private FilteredList<Beads> filteredData;
+	private FilteredList<Bead> filteredData;
 	private TabPane tabPane;
 	private Main mainApp;
 
 	private TabPaneOverviewController tabPaneOverviewController;
-	private SortedList<Beads> sortedData;
+	private SortedList<Bead> sortedData;
+
+	public HomeOverviewController() {
+
+	}
 
 	@FXML
 	private void initialize() {
 
-		mainCategoryName.setCellValueFactory(new PropertyValueFactory<Beads, String>("mainCategoryName"));
-		subcategoryName.setCellValueFactory(new PropertyValueFactory<Beads, String>("subcategoryName"));
-		categoryNameColumn.setCellValueFactory(new PropertyValueFactory<Beads, String>("categoryName"));
-		sizeColumn.setCellValueFactory(new PropertyValueFactory<Beads, String>("size"));
-		colorNameColumn.setCellValueFactory(new PropertyValueFactory<Beads, String>("colorName"));
-		finishColumn.setCellValueFactory(new PropertyValueFactory<Beads, String>("FinishesNames"));
+		mainCategoryName.setCellValueFactory(new PropertyValueFactory<Bead, String>("mainCategoryName"));
+		subcategoryName.setCellValueFactory(new PropertyValueFactory<Bead, String>("subcategoryName"));
+		categoryNameColumn.setCellValueFactory(new PropertyValueFactory<Bead, String>("categoryName"));
+		sizeColumn.setCellValueFactory(new PropertyValueFactory<Bead, String>("size"));
+		colorNameColumn.setCellValueFactory(new PropertyValueFactory<Bead, String>("colorName"));
+		finishColumn.setCellValueFactory(new PropertyValueFactory<Bead, String>("FinishesNames"));
 
 		colorFamilyFiltr.getItems().setAll(colorFamilyController.listColorFamily());
 		colorFamilyFiltr.getItems().add(0, new ColorFamily("Wszystkie", new HashSet<Color>()));
@@ -103,45 +112,18 @@ public class HomeOverviewController {
 		ownedFiltr.getSelectionModel().select(0);
 
 		finishFiltr.getItems().setAll(finishController.listFinishes());
-		finishFiltr.getItems().add(0, new Finish("Wszystkie", new HashSet<Beads>()));
+		finishFiltr.getItems().add(0, new Finish("Wszystkie", new HashSet<Bead>()));
 		finishFiltr.getSelectionModel().select(0);
 
-		mainCategoryFiltr.setItems(categoryController.listMainParents());
-		mainCategoryFiltr.getItems().add(0, new Category("Wszystkie", new HashSet<Beads>()));
-		mainCategoryFiltr.getSelectionModel().select(0);
-		subCategoryFiltr.getItems().add(0, new Category("", new HashSet<Beads>()));
-		subCategoryFiltr.getSelectionModel().select(0);
-		typeFiltr.getItems().add(0, new Category("", new HashSet<Beads>()));
-		typeFiltr.getSelectionModel().select(0);
+		shapeBox.getItems().setAll(shapeController.shapesList());
+		shapeBox.getItems().add(0, new Shape("Wszystkie", new HashSet<Bead>()));
+		shapeBox.getItems().remove(1);
+		shapeBox.getSelectionModel().select(0);
 
-		mainCategoryFiltr.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-
-			if (mainCategoryFiltr.getSelectionModel().getSelectedIndex() == 0) {
-				subCategoryFiltr.getItems().clear();
-				subCategoryFiltr.getItems().add(0, new Category("", new HashSet<Beads>()));
-				subCategoryFiltr.getSelectionModel().select(0);
-
-			}
-			subCategoryFiltr.setItems(categoryController.listChildren(newValue));
-			subCategoryFiltr.getItems().add(0, new Category("Wszystkie", new HashSet<Beads>()));
-			subCategoryFiltr.getSelectionModel().select(0);
-
-		});
-
-		subCategoryFiltr.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-
-			if (mainCategoryFiltr.getSelectionModel().getSelectedIndex() == 0) {
-				typeFiltr.getItems().clear();
-				typeFiltr.getItems().add(0, new Category("", new HashSet<Beads>()));
-				typeFiltr.getSelectionModel().select(0);
-
-			}
-
-			typeFiltr.setItems(categoryController.listChildren(newValue));
-			typeFiltr.getItems().add(0, new Category("Wszystkie", new HashSet<Beads>()));
-			typeFiltr.getSelectionModel().select(0);
-
-		});
+		brandBox.getItems().setAll(brandController.brandsList());
+		brandBox.getItems().add(0, new Brand("Wszystkie", new HashSet<Bead>()));
+		brandBox.getItems().remove(1);
+		brandBox.getSelectionModel().select(0);
 
 		wrapListAndAddFiltering();
 
@@ -157,11 +139,18 @@ public class HomeOverviewController {
 
 		});
 
-		beadsTable.setRowFactory(new Callback<TableView<Beads>, TableRow<Beads>>() {
+		duplicate.setOnAction(e -> {
+			Bead selectedBead = beadsTable.getSelectionModel().getSelectedItem();
+			Bead clone = Bead.cloneBead(selectedBead);
+			createNewBead(clone);
+
+		});
+
+		beadsTable.setRowFactory(new Callback<TableView<Bead>, TableRow<Bead>>() {
 
 			@Override
-			public TableRow<Beads> call(TableView<Beads> param) {
-				TableRow<Beads> row = new MyTableRowFormat();
+			public TableRow<Bead> call(TableView<Bead> param) {
+				TableRow<Bead> row = new MyTableRowFormat();
 				row.setOnMouseClicked(event -> {
 					if (event.getClickCount() > 1 && (!row.isEmpty())) {
 						mainApp.showBeadDetailDialog(row.getItem());
@@ -184,7 +173,7 @@ public class HomeOverviewController {
 	@FXML
 	private void handleDeleteBead() {
 		int selectedIndex = beadsTable.getSelectionModel().getSelectedIndex();
-		Beads currentBead = beadsTable.getSelectionModel().selectedItemProperty().getValue();
+		Bead currentBead = beadsTable.getSelectionModel().selectedItemProperty().getValue();
 		int id = currentBead.getIdBeads();
 		if (selectedIndex >= 0) {
 			beadController.removeBead(id);
@@ -204,7 +193,12 @@ public class HomeOverviewController {
 
 	@FXML
 	private void handleNewBead() {
-		Beads tempBead = new Beads();
+		Bead tempBead = new Bead();
+		createNewBead(tempBead);
+	}
+
+	private void createNewBead(Bead tempBead) {
+
 		boolean okClicked = mainApp.showBeadEditDialog(tempBead);
 		if (okClicked) {
 			beadController.addBead(tempBead);
@@ -224,34 +218,18 @@ public class HomeOverviewController {
 			if ((result.isPresent()) && (result.get() == ButtonType.OK)) {
 				handleShowBead();
 			}
-
 		}
 	}
 
 	@FXML
 	private void handleEditBead() {
-		Beads selectedBead = beadsTable.getSelectionModel().getSelectedItem();
-		if (selectedBead != null) {
-			boolean okClicked = mainApp.showBeadEditDialog(selectedBead);
-			if (okClicked) {
-				beadController.updateBead(selectedBead);
-			}
-
-		} else {
-
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.initOwner(mainApp.getPrimaryStage());
-			alert.setTitle("Nie wybrano");
-			alert.setHeaderText("Koralik nie wybrany");
-			alert.setContentText("Zaznacz koralik w tabeli");
-
-			alert.showAndWait();
-		}
+		Bead selectedBead = beadsTable.getSelectionModel().getSelectedItem();
+		editBead(selectedBead);
 
 	}
 
 	private void handleShowBead() {
-		Beads selectedBead = beadsTable.getSelectionModel().getSelectedItem();
+		Bead selectedBead = beadsTable.getSelectionModel().getSelectedItem();
 		if (selectedBead != null) {
 			mainApp.showBeadDetailDialog(selectedBead);
 
@@ -284,29 +262,36 @@ public class HomeOverviewController {
 								.equals(colorFamilyFiltr.getSelectionModel().getSelectedItem())
 								|| colorFamilyFiltr
 										.getSelectionModel().getSelectedIndex() == 0)
-						&& ((bead.getOwned().booleanValue() == true) && (ownedFiltr.getSelectionModel()
-								.getSelectedItem().equals("tak"))
+						&& ((bead.getOwned().booleanValue() == true)
+								&& (ownedFiltr.getSelectionModel().getSelectedItem()
+										.equals("tak"))
 								|| (bead.getOwned().booleanValue() == false)
 										&& (ownedFiltr.getSelectionModel().getSelectedItem().equals("nie"))
 								|| ownedFiltr.getSelectionModel().getSelectedIndex() == 0)
-						&& (bead.getParentCategory().equals(mainCategoryFiltr.getSelectionModel().getSelectedItem())
-								|| mainCategoryFiltr.getSelectionModel().getSelectedIndex() == 0)
-						&& (bead.getSubcategory().equals(subCategoryFiltr.getSelectionModel().getSelectedItem())
-								|| subCategoryFiltr.getSelectionModel().getSelectedIndex() == 0)
-						&& (bead.getCategory().equals(typeFiltr.getSelectionModel().getSelectedItem())
-								|| typeFiltr.getSelectionModel().getSelectedIndex() == 0)
+		/*
+		 * && (bead.getCategory().getParentCategory()
+		 * .getParentCategory().getCategoryName().contains(categoryFiltr.getText
+		 * ().toLowerCase()) ||
+		 * bead.getCategory().getParentCategory().getCategoryName()
+		 * .contains(categoryFiltr.getText().toLowerCase()) ||
+		 * bead.getCategory().getCategoryName().toLowerCase()
+		 * .contains(categoryFiltr.getText().toLowerCase()) ||
+		 * bead.getCategory().getCategoryName().contains(""))
+		 */
 						&& bead.getSize().toLowerCase().contains(sizeFiltr.getText().toLowerCase())
 						&& (bead.getFinishesNames()
-								.contains(finishFiltr.getSelectionModel().getSelectedItem()
-										.getNameFinish())
-								|| finishFiltr.getSelectionModel().getSelectedIndex() == 0),
+								.contains(finishFiltr.getSelectionModel().getSelectedItem().getNameFinish())
+								|| finishFiltr.getSelectionModel().getSelectedIndex() == 0)
+						&& (bead.getShapes().equals(shapeBox.getSelectionModel().getSelectedItem())
+								|| shapeBox.getSelectionModel().getSelectedIndex() == 0)
+						&& (bead.getBrands().equals(brandBox.getSelectionModel().getSelectedItem())
+								|| brandBox.getSelectionModel().getSelectedIndex() == 0),
 
 						colorFiltr.textProperty(), colorFamilyFiltr.getSelectionModel().selectedItemProperty(),
-						ownedFiltr.getSelectionModel().selectedItemProperty(),
-						mainCategoryFiltr.getSelectionModel().selectedItemProperty(),
-						subCategoryFiltr.getSelectionModel().selectedItemProperty(),
-						typeFiltr.getSelectionModel().selectedItemProperty(), sizeFiltr.textProperty(),
-						finishFiltr.getSelectionModel().selectedItemProperty()
+						ownedFiltr.getSelectionModel().selectedItemProperty(), sizeFiltr.textProperty(),
+						finishFiltr.getSelectionModel().selectedItemProperty(), categoryFiltr.textProperty(),
+						shapeBox.getSelectionModel().selectedItemProperty(),
+						brandBox.getSelectionModel().selectedItemProperty()
 
 		));
 
@@ -316,22 +301,43 @@ public class HomeOverviewController {
 
 	}
 
-	private void add(Beads item) {
+	private void add(Bead item) {
 		masterData.add(item);
 		wrapListAndAddFiltering();
 
 	}
 
-	private void remove(Beads item) {
+	private void remove(Bead item) {
 		masterData.remove(item);
 		wrapListAndAddFiltering();
 
 	}
+
+	public void editBead(Bead selectedBead) {
+		if (selectedBead != null) {
+			boolean okClicked = mainApp.showBeadEditDialog(selectedBead);
+			if (okClicked) {
+				beadController.updateBead(selectedBead);
+				wrapListAndAddFiltering();
+			}
+
+		} else {
+
+			Alert alert = new Alert(AlertType.WARNING);
+			alert.initOwner(mainApp.getPrimaryStage());
+			alert.setTitle("Nie wybrano");
+			alert.setHeaderText("Koralik nie wybrany");
+			alert.setContentText("Zaznacz koralik w tabeli");
+
+			alert.showAndWait();
+		}
+	}
+
 }
 
-class MyTableRowFormat extends TableRow<Beads> {
+class MyTableRowFormat extends TableRow<Bead> {
 	@Override
-	protected void updateItem(Beads item, boolean empty) {
+	protected void updateItem(Bead item, boolean empty) {
 		super.updateItem(item, empty);
 		if (item == null) {
 			setStyle("");

@@ -2,6 +2,7 @@ package App.Model;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -19,30 +22,28 @@ import javax.persistence.TemporalType;
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "stores", schema = "dbo", catalog = "koraliki")
-public class Stores implements java.io.Serializable {
+public class Store implements java.io.Serializable {
 	private Integer idStores;
 	private String storeName;
 	private String website;
-	private Date updateDate;
-	private String country;
+	private Calendar updateDate;
+	private Country countries;
 	private Set<ProductsInStores> productsInStores = new HashSet<ProductsInStores>(0);
 
-	public Stores() {
-		this.storeName = null;
-		this.website = null;
+	public Store() {
+		this.updateDate = Calendar.getInstance();
 
 	}
 
-	public Stores(String storeName) {
+	public Store(String storeName) {
 		this.storeName = storeName;
 	}
 
-	public Stores(String storeName, String website, Date updateDate, String country, Set<ProductsInStores> productsInStores) {
-		this.storeName = storeName;
+	public Store(Country countries, String nameStores, String website, Calendar updateDate) {		
+		this.countries = countries;
+		this.storeName = nameStores;
 		this.website = website;
 		this.updateDate = updateDate;
-		this.country = country;
-		this.productsInStores = productsInStores;
 	}
 
 	@Id
@@ -74,21 +75,23 @@ public class Stores implements java.io.Serializable {
 		this.website = website;
 	}
 	
-	@Column(name = "Country")
-	public String getCountry() {
-		return this.country;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Country_idCountry")
+	public Country getCountries() {
+		return this.countries;
 	}
-	public void setCountry(String country){
-		this.country = country;
+
+	public void setCountries(Country countries) {
+		this.countries = countries;
 	}
 
 	@Temporal(TemporalType.DATE)
 	@Column(name = "updateDate")
-	public Date getUpdateDate() {
+	public Calendar getUpdateDate() {
 		return this.updateDate;
 	}
 
-	public void setUpdateDate(Date updateDate) {
+	public void setUpdateDate(Calendar updateDate) {
 		this.updateDate = updateDate;
 	}
 
@@ -104,6 +107,24 @@ public class Stores implements java.io.Serializable {
 	@Override
 	public String toString() {
 		return this.storeName;
+	}
+		
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (!Store.class.isAssignableFrom(obj.getClass())) {
+			return false;
+		}
+		final Store other = (Store) obj;
+		if ((this.idStores == null) ? (other.idStores != null)
+				: !this.idStores.equals(other.idStores)) {
+			return false;
+		}
+
+		return true;
 	}
 
 }

@@ -1,20 +1,20 @@
 package App;
 
-import App.Model.Stores;
+import App.Model.Store;
 import App.Service.StoreService;
 import App.Service.StoreServiceImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class StoresController {
+public class StoreController {
 	
 	private StoreService storeService = new StoreServiceImpl();
-	private ObservableList<Stores> storesList = FXCollections.observableArrayList();
+	private ObservableList<Store> storesList = FXCollections.observableArrayList();
 
-	public void addStore(Stores store) {
+	public void addStore(Store store) {
 		storeService.addStore(store);
 	}
-	public ObservableList<Stores> listStores() {
+	public ObservableList<Store> listStores() {
 		if (!storesList.isEmpty()) {
 			storesList.clear();
 		}
@@ -24,7 +24,7 @@ public class StoresController {
 	public void removeStore(Integer id) {
 		storeService.removeStore(id);
 	}
-	public void updateStore(Stores store) {
+	public void updateStore(Store store) {
 		storeService.updateStore(store);
 	}
 }

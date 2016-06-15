@@ -2,13 +2,13 @@ package App.dao;
 
 import java.util.List;
 
-import App.Model.Stores;
+import App.Model.Store;
 
 public interface StoresDAO {
 	
-	public void addStore(Stores store);
-	public List<Stores> listStores();
+	public void addStore(Store store);
+	public List<Store> listStores();
 	public void removeStore(Integer id);
-	public void updateStore(Stores store);
+	public void updateStore(Store store);
 
 }

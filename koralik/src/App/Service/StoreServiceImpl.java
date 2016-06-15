@@ -2,7 +2,7 @@ package App.Service;
 
 import java.util.List;
 
-import App.Model.Stores;
+import App.Model.Store;
 import App.dao.StoresDAO;
 import App.dao.StoresDAOImpl;
 
@@ -11,12 +11,12 @@ public class StoreServiceImpl implements StoreService {
 	private StoresDAO storesDAO = new StoresDAOImpl();
 
 	@Override
-	public void addStore(Stores store) {
+	public void addStore(Store store) {
 		storesDAO.addStore(store);
 	}
 
 	@Override
-	public List<Stores> listStores() {
+	public List<Store> listStores() {
 		return storesDAO.listStores();
 	}
 
@@ -27,7 +27,7 @@ public class StoreServiceImpl implements StoreService {
 	}
 
 	@Override
-	public void updateStore(Stores store) {
+	public void updateStore(Store store) {
 		storesDAO.updateStore(store);
 		
 	}

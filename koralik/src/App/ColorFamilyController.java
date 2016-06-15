@@ -11,22 +11,27 @@ import javafx.collections.ObservableList;
 public class ColorFamilyController {
 	
 	private ColorFamilyService colorFamilyService  = new ColorFamilyServiceImpl();
-	
-	private ObservableList<ColorFamily> colorFamilylist = FXCollections.observableArrayList();
+
 
 	public void updateColorFamily(ColorFamily colorFamily){
 		colorFamilyService.updateColorFamily(colorFamily);
 	}
 	
 	public List<ColorFamily> listColorFamily(){
-		if (!colorFamilylist.isEmpty()) {
-			colorFamilylist.clear();
-		}
+		ObservableList<ColorFamily> colorFamilylist = FXCollections.observableArrayList();
 		colorFamilylist = FXCollections.observableList((List<ColorFamily>) colorFamilyService.listColorFamily());
 		return colorFamilylist;
 	}
 	
 	public ColorFamily getDefaultColorFamily(){
 		return colorFamilyService.getDefaultColorFamily();
+	}
+	
+	public void addColorFamily(ColorFamily colorFamily){
+		colorFamilyService.addColorFamily(colorFamily);
+		
+	}
+	public void removeColorFamily(ColorFamily colorFamily){
+		colorFamilyService.removeColorFamily(colorFamily);
 	}
 }

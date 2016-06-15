@@ -49,8 +49,11 @@
                                  <contextMenu>
                                     <ContextMenu>
                                       <items>
+                                          <MenuItem fx:id="synonims" mnemonicParsing="false" text="Synonimy" />
+                                          <MenuItem fx:id="newColor" mnemonicParsing="false" text="Dodaj kolor" />
                                         <MenuItem fx:id="editColor" mnemonicParsing="false" text="Edytuj" />
                                           <MenuItem fx:id="deleteColor" mnemonicParsing="false" text="Usuń" />
+                                          <MenuItem fx:id="changeColor" mnemonicParsing="false" text="Zmień kolor" />
                                       </items>
                                     </ContextMenu>
                                  </contextMenu>
@@ -74,6 +77,7 @@
                                     <ContextMenu>
                                       <items>
                                         <MenuItem fx:id="editBead" mnemonicParsing="false" text="Edytuj" />
+                                          <MenuItem fx:id="deleteBead" mnemonicParsing="false" text="Usuń" />
                                       </items>
                                     </ContextMenu>
                                  </contextMenu>

@@ -2,7 +2,11 @@ package App.Service;
 
 import java.util.List;
 
+import org.hibernate.Session;
+
+import App.Model.Brand;
 import App.Model.Category;
+import App.Model.HibernateUtil;
 import App.dao.CategoryDAO;
 import App.dao.CategoryDAOImpl;
 
@@ -26,6 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
 	public void update(Category category) {
 		categoryDAO.update(category);
 		
+	}
+	@Override
+	public void removeCategory(Category c) {
+		categoryDAO.removeCategory(c);
 	}
 
 	@Override

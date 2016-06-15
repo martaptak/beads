@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
-import App.Model.Beads;
+import org.hibernate.criterion.Restrictions;
+
+import App.Model.Bead;
 import App.Model.HibernateUtil;
 import App.Model.ProductsInStores;
 
@@ -29,7 +30,11 @@ public class ProductInStoresDAOImpl implements ProductInStoresDAO {
 		List<ProductsInStores> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		list = s.createQuery("FROM ProductsInStores as p join fetch p.stores").list();
+	//	list = s.createQuery("FROM ProductsInStores as p join fetch p.stores").list();
+		Criteria criteria = s.createCriteria(ProductsInStores.class, "product");
+		criteria.createAlias("product.stores", "stores");		
+		list = criteria.list();
+		
 		s.getTransaction().commit();
 		s.close();
 		return list;
@@ -58,13 +63,19 @@ public class ProductInStoresDAOImpl implements ProductInStoresDAO {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ProductsInStores> listProducts(Beads bead) {
+	public List<ProductsInStores> listProducts(Bead bead) {
 		List<ProductsInStores> list = new ArrayList<>();
 		Session s = HibernateUtil.openSession();
 		s.beginTransaction();
-		Query query = s.createQuery("FROM ProductsInStores as s join fetch s.stores where s.beads=:bead");
+		/*Query query = s.createQuery("FROM ProductsInStores as s join fetch s.stores where s.beads=:bead");
 		query.setParameter("bead", bead);
-		list = query.list();
+		list = query.list();*/
+		
+		Criteria criteria = s.createCriteria(ProductsInStores.class, "product");
+		criteria.createAlias("product.stores", "stores");
+		criteria.add(Restrictions.eq("product.beads", bead));
+		list = criteria.list();
+		
 		s.getTransaction().commit();
 		s.close();
 		return list;

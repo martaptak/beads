@@ -4,22 +4,22 @@ import java.util.List;
 
 import org.w3c.dom.Element;
 
-import App.Model.Beads;
+import App.Model.Bead;
 import App.Model.Category;
 import App.Model.Color;
 
 public interface BeadDAO {
 
-	public void addBead(Beads bead);
-	public List<Beads> listBeads();
+	public void addBead(Bead bead);
+	public List<Bead> listBeads();
 	public void removeBeads(Integer id);
-	public void updateBeads(Beads beads);
-	public List<Beads> listBeadsBySize(String size);
-	public List<Beads> superSearch(String searchString);
-	public List<Beads> findBead(Element element);
-	public List<Beads> listBeadsForTable();
-	public List<Beads> listBeadsForTable(Category category);
-	public List<Beads> listBeadsForTable(String categoryParent, String categoryChild);
-	public List<Beads> listBeadsByColor(Color color);
+	public void updateBeads(Bead beads);
+	public List<Bead> listBeadsBySize(String size);
+	public List<Bead> superSearch(String searchString);
+	public List<Bead> findBead(Element element);
+	public List<Bead> listBeadsForTable();
+	public List<Bead> listBeadsForTable(Category category);
+	public List<Bead> listBeadsForTable(String categoryParent, String categoryChild);
+	public List<Bead> listBeadsByColor(Color color);
 	
 }

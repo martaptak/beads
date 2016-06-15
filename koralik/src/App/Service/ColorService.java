@@ -9,6 +9,7 @@ public interface ColorService {
 	public void addColor(Color color);
 	public void mergeColor(Color color1, Color color2);
 	public void updateColor(Color color);
+	public void removeColor(Color color);
 	public List<Color> listColors();
 	public List<Color> listColorsByName(String name);
 	public List<Color> listColorByCode(String code);

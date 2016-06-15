@@ -27,6 +27,11 @@ public class ColorServiceImpl implements ColorService{
 		colorDAO.updateColor(color);
 		
 	}
+	
+	@Override
+	public void removeColor(Color color){
+		colorDAO.removeColor(color);
+	}
 
 	@Override
 	public List<Color> listColors() {

@@ -26,7 +26,7 @@ public class Category implements java.io.Serializable {
 	private String categoryName;
 	private int categoryDepth;
 	private Set<Category> childrenCategories = new HashSet<Category>(0);
-	private Set<Beads> beads = new HashSet<Beads>(0);
+	private Set<Bead> beads = new HashSet<Bead>(0);
 
 	public Category() {
 
@@ -34,6 +34,7 @@ public class Category implements java.io.Serializable {
 
 	public Category(String categoryName) {
 		this.categoryName = categoryName;
+		this.categoryDepth = 0;
 	}
 
 	public Category(String categoryName, int depth) {
@@ -47,14 +48,14 @@ public class Category implements java.io.Serializable {
 		this.categoryDepth = parentCategory.getDepth() + 1;
 	}
 
-	public Category(Category parentCategory, String categoryName, int depth, Set<Beads> beads) {
+	public Category(Category parentCategory, String categoryName, int depth, Set<Bead> beads) {
 		this.parentCategory = parentCategory;
 		this.categoryName = categoryName;
 		this.beads = beads;
 		this.categoryDepth = depth;
 	}
 
-	public Category(String categoryName, Set<Beads> beads) {
+	public Category(String categoryName, Set<Bead> beads) {
 		this.categoryName = categoryName;
 		this.beads = beads;
 	}
@@ -108,11 +109,11 @@ public class Category implements java.io.Serializable {
 	}
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "category")
-	public Set<Beads> getBeads() {
+	public Set<Bead> getBeads() {
 		return this.beads;
 	}
 
-	public void setBeads(Set<Beads> beads) {
+	public void setBeads(Set<Bead> beads) {
 		this.beads = beads;
 	}
 
